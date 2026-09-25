@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>小兒急性氣喘發作處置計算機</title>
-  <!-- PWA 宣告 (若有需要可保留並配合 manifest.json) -->
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#198754">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
@@ -16,13 +15,11 @@
     .result-title { font-size: 0.9rem; color: #6c757d; margin-bottom: 5px; }
     .result-value { font-size: 1.3rem; font-weight: bold; color: #212529; }
     .drug-dose { font-size: 1.5rem; color: #d63384; font-weight: bold; }
-    
-    /* 嚴重度顏色標示 */
     .severity-mild { color: #198754; }
     .severity-mod { color: #fd7e14; }
     .severity-sev { color: #dc3545; }
+    .tree-btn { border-radius: 20px; font-weight: bold; }
 
-    /* 列印專屬樣式 */
     @media print {
       .d-print-none { display: none !important; }
       body { background-color: #fff; color: #000; font-size: 12pt; }
@@ -39,7 +36,6 @@
 </head>
 <body>
 
-<!-- 網頁互動區塊 -->
 <div class="container py-4 d-print-none">
   <h2 class="text-center mb-4">小兒急性氣喘發作處置計算機</h2>
   
@@ -47,23 +43,21 @@
     <!-- 左側輸入區 -->
     <div class="col-md-6">
       <div class="card">
-        <div class="card-header text-success">1. 病患參數與 PRAM 評估</div>
+        <div class="card-header text-success">1. 初始評估 (Initial PRAM)</div>
         <div class="card-body">
           <form id="asthmaForm">
             <div class="row mb-3">
               <div class="col-6">
                 <label class="form-label text-danger fw-bold">目前體重 (kg) *</label>
-                <input type="number" class="form-control border-danger" id="weight" step="0.1" min="1" required placeholder="例如: 15">
+                <input type="number" class="form-control border-danger" id="weight" step="0.1" min="1" required>
               </div>
               <div class="col-6">
                 <label class="form-label">年齡 (選填)</label>
-                <input type="text" class="form-control" id="age" placeholder="例如: 4歲">
+                <input type="text" class="form-control" id="age">
               </div>
             </div>
 
             <hr>
-            <h6 class="mb-3 text-secondary">Pediatric Respiratory Assessment Measure (PRAM)</h6>
-            
             <div class="mb-3">
               <label class="form-label">1. 血氧飽和度 (O₂ Saturation)</label>
               <select class="form-select" id="pramO2">
@@ -74,7 +68,7 @@
             </div>
             
             <div class="mb-3">
-              <label class="form-label">2. 胸骨上凹陷 (Suprasternal Retractions)</label>
+              <label class="form-label">2. 胸骨上凹陷</label>
               <select class="form-select" id="pramSupra">
                 <option value="0">無 (0分)</option>
                 <option value="2">有凹陷 (2分)</option>
@@ -82,7 +76,7 @@
             </div>
 
             <div class="mb-3">
-              <label class="form-label">3. 斜角肌收縮 (Scalene Muscle Contraction)</label>
+              <label class="form-label">3. 斜角肌收縮</label>
               <select class="form-select" id="pramScalene">
                 <option value="0">無 (0分)</option>
                 <option value="2">有收縮 (2分)</option>
@@ -90,27 +84,27 @@
             </div>
 
             <div class="mb-3">
-              <label class="form-label">4. 呼吸音 / 進入量 (Air Entry)</label>
+              <label class="form-label">4. 呼吸音 / 進入量</label>
               <select class="form-select" id="pramAir">
-                <option value="0">正常 Normal (0分)</option>
-                <option value="1">底部減少 Decreased at bases (1分)</option>
-                <option value="2">廣泛減少 Widespread decrease (2分)</option>
-                <option value="3">極少或無 Absent / Minimal (3分)</option>
+                <option value="0">正常 (0分)</option>
+                <option value="1">底部減少 (1分)</option>
+                <option value="2">廣泛減少 (2分)</option>
+                <option value="3">極少或無 (3分)</option>
               </select>
             </div>
 
             <div class="mb-4">
               <label class="form-label">5. 喘鳴音 (Wheezing)</label>
               <select class="form-select" id="pramWheeze">
-                <option value="0">無 Absent (0分)</option>
-                <option value="1">僅呼氣期 Expiratory only (1分)</option>
-                <option value="2">吸氣與呼氣期 Insp & Exp (2分)</option>
+                <option value="0">無 (0分)</option>
+                <option value="1">僅呼氣期 (1分)</option>
+                <option value="2">吸氣與呼氣期 (2分)</option>
                 <option value="3">不需聽診器即可聽見 / 寂靜胸 (3分)</option>
               </select>
             </div>
 
             <button type="button" class="btn btn-success w-100 py-2 mb-2" onclick="calculateAsthma()">產生處置計畫</button>
-            <button type="button" class="btn btn-outline-secondary w-100 py-2" id="printBtn" onclick="printOrder()" disabled>🖨️ 匯出 / 列印醫囑單 (PDF)</button>
+            <button type="button" class="btn btn-outline-secondary w-100 py-2" id="printBtn" onclick="printOrder()" disabled>🖨️ 列印醫囑單 (PDF)</button>
           </form>
         </div>
       </div>
@@ -123,57 +117,59 @@
         <div class="card-body">
           
           <div class="result-box text-center">
-            <div class="result-title">PRAM 總分與嚴重度</div>
+            <div class="result-title">初始 PRAM 總分與嚴重度</div>
             <div class="result-value" id="resPramScore" style="font-size: 2rem;">--</div>
             <div class="fw-bold mt-1" id="resSeverity">請先輸入參數</div>
           </div>
 
           <h6 class="mt-3 text-secondary">急性期處置建議 (Initial Management)</h6>
           <div class="result-box" style="background-color: #fff3cd;">
-            <div class="result-title">臨床指引處置方向</div>
             <div id="resGuideline" class="fw-bold text-dark">--</div>
           </div>
 
-          <h6 class="mt-3 text-secondary">藥物精算劑量表 (基於體重)</h6>
-          
+          <h6 class="mt-3 text-secondary">藥物精算劑量表 (依體重)</h6>
           <div class="row">
-            <!-- 支氣管擴張劑 -->
-            <div class="col-12 mb-2">
+            <div class="col-6 mb-2">
               <div class="result-box border border-primary" style="background-color: #f0f8ff;">
-                <div class="result-title">Salbutamol (SABA) 霧化吸入液</div>
+                <div class="result-title">SABA 霧化吸入液</div>
                 <div class="drug-dose" id="resSalbutamol">--</div>
-                <small class="text-muted" id="resSalbutamolFreq">--</small>
               </div>
             </div>
-            
-            <div class="col-12 mb-2">
+            <div class="col-6 mb-2">
               <div class="result-box border border-info" style="background-color: #f0f8ff;">
-                <div class="result-title">Ipratropium (SAMA) 霧化吸入液</div>
+                <div class="result-title">SAMA 霧化吸入液</div>
                 <div class="drug-dose" id="resIpratropium">--</div>
-                <small class="text-muted">中重度以上考慮與 SABA 併用</small>
               </div>
             </div>
-
-            <!-- 類固醇 -->
             <div class="col-6">
               <div class="result-box border border-danger" style="background-color: #fff5f5;">
-                <div class="result-title">口服 Prednisolone</div>
+                <div class="result-title">PO Prednisolone</div>
                 <div class="drug-dose" id="resPrednisolone">--</div>
-                <small class="text-muted">Max: 60 mg/day</small>
               </div>
             </div>
             <div class="col-6">
               <div class="result-box border border-danger" style="background-color: #fff5f5;">
-                <div class="result-title">口服 Dexamethasone</div>
-                <div class="drug-dose" id="resDexamethasone">--</div>
-                <small class="text-muted">Max: 16 mg/day</small>
+                <div class="result-title">IV MgSO4 (重度保留)</div>
+                <div class="drug-dose" id="resMg">--</div>
               </div>
             </div>
           </div>
-          
-          <div class="alert alert-warning mt-3" style="font-size: 0.85rem;" id="resSevereAlert" style="display:none;">
-            <strong>⚠️ 重度發作警示：</strong><br>
-            若對連續 3 劑 SABA 霧化治療無反應，請考慮靜脈注射 <strong>Methylprednisolone (1-2 mg/kg)</strong>，並準備 <strong>IV Magnesium Sulfate (<span id="resMg"></span> mg)</strong>。
+
+          <!-- 1小時後再評估模組 (初始隱藏) -->
+          <div id="reEvaluationSection" style="display: none; margin-top: 20px; border-top: 2px dashed #ccc; padding-top: 20px;">
+            <h5 class="text-primary mb-3">🕒 治療 1 小時後決策樹 (Re-evaluation)</h5>
+            <p class="text-muted small">請依據第一階段治療後的反應，選擇目前新的 PRAM 分數：</p>
+            
+            <div class="d-flex justify-content-between mb-3">
+              <button class="btn btn-outline-success tree-btn flex-fill mx-1" onclick="updateDecisionTree(0)">0-3 分<br>(反應良好)</button>
+              <button class="btn btn-outline-warning tree-btn flex-fill mx-1" onclick="updateDecisionTree(4)">4-7 分<br>(部分反應)</button>
+              <button class="btn btn-outline-danger tree-btn flex-fill mx-1" onclick="updateDecisionTree(8)">8-12 分<br>(無反應/惡化)</button>
+            </div>
+
+            <div class="result-box border" id="treeResultBox" style="background-color: #fff; display: none;">
+              <div class="result-title" id="treeTitle">--</div>
+              <div class="result-value" id="treeAction" style="font-size: 1.1rem; color: #333;">--</div>
+            </div>
           </div>
 
         </div>
@@ -182,131 +178,73 @@
   </div>
 </div>
 
-<!-- ================= 列印專屬區塊 (平時隱藏) ================= -->
+<!-- 列印專屬區塊 -->
 <div id="print-section" style="display: none;">
   <div class="print-header">
     <h2>小兒急性氣喘發作處置醫囑單</h2>
-    <p>Pediatric Acute Asthma Exacerbation Order</p>
   </div>
-
   <div class="print-row">
-    <div>
-      <strong>病歷號 (Chart No.):</strong> ___________________<br>
-      <strong>病患姓名 (Name):</strong> ___________________
-    </div>
-    <div>
-      <strong>評估日期/時間:</strong> <span id="prtDateTime"></span><br>
-      <strong>體重 (Weight):</strong> <span id="prtWeight"></span> kg
-    </div>
+    <div><strong>體重 (Weight):</strong> <span id="prtWeight"></span> kg</div>
+    <div><strong>評估時間:</strong> <span id="prtDateTime"></span></div>
   </div>
-
   <div class="print-box">
-    <h4>一、 臨床評估 (PRAM Score)</h4>
-    <p><strong>PRAM 總分:</strong> <span id="prtScore"></span> / 12 分</p>
-    <p><strong>嚴重度判定:</strong> <strong id="prtSeverity" style="font-size:1.2em;"></strong></p>
+    <h4>一、 初始評估與處置</h4>
+    <p><strong>PRAM 總分:</strong> <span id="prtScore"></span> 分 (<span id="prtSeverity"></span>)</p>
     <p><strong>處置方針:</strong> <span id="prtGuideline"></span></p>
   </div>
-
   <div class="print-box">
-    <h4>二、 藥物劑量醫囑 (Medication Orders)</h4>
-    <table class="print-table">
-      <thead>
-        <tr>
-          <th>藥物類別</th>
-          <th>單次建議劑量 (依體重精算)</th>
-          <th>給藥頻率與途徑</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td><strong>Salbutamol (SABA)</strong><br>支氣管擴張劑</td>
-          <td><strong style="font-size: 1.2em;" id="prtSalbutamol"></strong></td>
-          <td id="prtSalbutamolFreq"></td>
-        </tr>
-        <tr>
-          <td><strong>Ipratropium (SAMA)</strong><br>副交感神經阻斷劑</td>
-          <td><strong style="font-size: 1.2em;" id="prtIpratropium"></strong></td>
-          <td>與 SABA 混合，利用噴霧器 (Nebulizer) 吸入</td>
-        </tr>
-        <tr>
-          <td><strong>Prednisolone (PO)</strong><br>口服類固醇</td>
-          <td><strong style="font-size: 1.2em;" id="prtPred"></strong></td>
-          <td>1-2 mg/kg/dose (Max: 60mg) 每天一次，療程 3-5 天</td>
-        </tr>
-        <tr>
-          <td><strong>Dexamethasone (PO)</strong><br>長效口服類固醇</td>
-          <td><strong style="font-size: 1.2em;" id="prtDexa"></strong></td>
-          <td>0.6 mg/kg/dose (Max: 16mg) 每天一次，療程 1-2 天</td>
-        </tr>
-        <tr>
-          <td><strong>MgSO4 (IV)</strong><br>硫酸鎂 (重度保留)</td>
-          <td><strong style="font-size: 1.2em;" id="prtMg"></strong></td>
-          <td>50 mg/kg (Max: 2g)，加入輸液滴注 20 分鐘以上</td>
-        </tr>
-      </tbody>
-    </table>
+    <h4>二、 藥物劑量</h4>
+    <ul>
+      <li><strong>Salbutamol (SABA):</strong> <span id="prtSalbutamol"></span></li>
+      <li><strong>Ipratropium (SAMA):</strong> <span id="prtIpratropium"></span></li>
+      <li><strong>Prednisolone (PO):</strong> <span id="prtPred"></span> (1-2 mg/kg, Max 60mg)</li>
+      <li><strong>MgSO4 (IV):</strong> <span id="prtMg"></span> (50 mg/kg, Max 2g)</li>
+    </ul>
   </div>
-
-  <div class="signature-area">
-    <p><strong>醫師簽章 (Physician Signature):</strong> ___________________________</p>
+  <div class="print-box">
+    <h4>三、 1 小時後追蹤決策紀錄</h4>
+    <p><strong>治療後評估反應:</strong> <span id="prtTreeEval">尚未評估</span></p>
+    <p><strong>後續動向:</strong> <span id="prtTreeAction">--</span></p>
   </div>
 </div>
 
 <script>
   let latestAsthmaData = null;
+  let reEvalState = "尚未評估";
+  let reEvalAction = "--";
 
   function calculateAsthma() {
     const weight = parseFloat(document.getElementById('weight').value);
     if (isNaN(weight) || weight <= 0) { alert("請輸入有效的體重！"); return; }
 
-    // 1. 計算 PRAM Score
-    const pram = 
-      parseInt(document.getElementById('pramO2').value) +
-      parseInt(document.getElementById('pramSupra').value) +
-      parseInt(document.getElementById('pramScalene').value) +
-      parseInt(document.getElementById('pramAir').value) +
-      parseInt(document.getElementById('pramWheeze').value);
+    const pram = parseInt(document.getElementById('pramO2').value) +
+                 parseInt(document.getElementById('pramSupra').value) +
+                 parseInt(document.getElementById('pramScalene').value) +
+                 parseInt(document.getElementById('pramAir').value) +
+                 parseInt(document.getElementById('pramWheeze').value);
 
-    let severity = "";
-    let severityClass = "";
-    let guideline = "";
+    let severity = "", severityClass = "", guideline = "";
 
-    if (pram >= 0 && pram <= 3) {
-      severity = "輕度 (Mild)";
-      severityClass = "severity-mild";
-      guideline = "給予 SABA 治療，觀察 1 小時。若改善可考慮口服類固醇後開藥回家 (Discharge)。";
-    } else if (pram >= 4 && pram <= 7) {
-      severity = "中度 (Moderate)";
-      severityClass = "severity-mod";
-      guideline = "給予 SABA + Ipratropium (SAMA) 霧化治療，給予全身性口服類固醇。監測氧氣需求，1 小時後重新評估。";
+    if (pram <= 3) {
+      severity = "輕度 (Mild)"; severityClass = "severity-mild";
+      guideline = "給予 SABA 治療，觀察 1 小時。若改善可考慮開立口服類固醇後 Discharge。";
+    } else if (pram <= 7) {
+      severity = "中度 (Moderate)"; severityClass = "severity-mod";
+      guideline = "給予 SABA + SAMA 霧化治療，給予口服全身性類固醇。監測氧氣需求，1 小時後重新評估。";
     } else {
-      severity = "重度 (Severe)";
-      severityClass = "severity-sev";
-      guideline = "立即給予高濃度氧氣，連續 3 劑 SABA + SAMA 霧化治療。建立靜脈輸液，給予 IV 類固醇，若無反應考慮 IV MgSO4。";
+      severity = "重度 (Severe)"; severityClass = "severity-sev";
+      guideline = "立即給予高濃度氧氣，連續 3 劑 SABA+SAMA。建立靜脈輸液，給予 IV 類固醇，準備 IV MgSO4。";
     }
 
-    // 2. 藥物劑量計算
-    // SABA Nebulizer: <20kg 給 2.5mg; >=20kg 給 5.0mg
     const salbutamolDose = weight < 20 ? "2.5 mg" : "5.0 mg";
-    const salbutamolFreq = pram > 3 ? "每 20 分鐘給予一次，連續 3 劑" : "單次給予，必要時重複";
-
-    // SAMA (Ipratropium): <20kg 給 250 mcg; >=20kg 給 500 mcg
-    const ipratropiumDose = weight < 20 ? "250 mcg (1/2 支)" : "500 mcg (1 支)";
-
-    // 類固醇 PO
-    // Prednisolone: 1-2 mg/kg, max 60mg
+    const ipratropiumDose = weight < 20 ? "250 mcg" : "500 mcg";
+    
     let predDose = Math.round(weight * 1.5); 
     if (predDose > 60) predDose = 60;
     
-    // Dexamethasone: 0.6 mg/kg, max 16mg
-    let dexaDose = (weight * 0.6).toFixed(1);
-    if (dexaDose > 16) dexaDose = 16.0;
-
-    // IV MgSO4: 50 mg/kg, max 2000mg
     let mgDose = Math.round(weight * 50);
     if (mgDose > 2000) mgDose = 2000;
 
-    // 3. 更新 UI
     const scoreEl = document.getElementById('resPramScore');
     scoreEl.innerText = `${pram} 分`;
     scoreEl.className = `result-value ${severityClass}`;
@@ -316,39 +254,65 @@
     document.getElementById('resGuideline').innerText = guideline;
     
     document.getElementById('resSalbutamol').innerText = salbutamolDose;
-    document.getElementById('resSalbutamolFreq').innerText = salbutamolFreq;
     document.getElementById('resIpratropium').innerText = ipratropiumDose;
-    
     document.getElementById('resPrednisolone').innerText = `${predDose} mg`;
-    document.getElementById('resDexamethasone').innerText = `${dexaDose} mg`;
+    document.getElementById('resMg').innerText = `${mgDose} mg`;
 
-    document.getElementById('resMg').innerText = mgDose;
-    document.getElementById('resSevereAlert').style.display = (pram >= 8) ? "block" : "none";
+    // 顯示 1小時再評估區塊
+    document.getElementById('reEvaluationSection').style.display = "block";
+    document.getElementById('treeResultBox').style.display = "none";
+    reEvalState = "尚未評估";
+    reEvalAction = "--";
 
-    // 儲存列印資料
-    latestAsthmaData = {
-      weight, pram, severity, guideline, salbutamolDose, salbutamolFreq, ipratropiumDose, predDose, dexaDose, mgDose
-    };
+    latestAsthmaData = { weight, pram, severity, guideline, salbutamolDose, ipratropiumDose, predDose, mgDose };
     document.getElementById('printBtn').disabled = false;
+  }
+
+  // 1小時後決策樹邏輯
+  function updateDecisionTree(newPram) {
+    const box = document.getElementById('treeResultBox');
+    const title = document.getElementById('treeTitle');
+    const action = document.getElementById('treeAction');
+    
+    box.style.display = "block";
+
+    if (newPram <= 3) {
+      box.className = "result-box border border-success";
+      box.style.backgroundColor = "#f0fff4";
+      title.innerHTML = "✅ 反應良好 (PRAM 0-3)";
+      action.innerHTML = "<strong>動向：準備出院 (Discharge)</strong><br>• 開立 3-5 天口服類固醇療程。<br>• 衛教 SABA MDI 使用時機 (需搭配吸藥輔助器 Spacer)。<br>• 安排 1-2 天內門診追蹤。";
+      reEvalState = "反應良好 (PRAM 0-3)";
+    } else if (newPram <= 7) {
+      box.className = "result-box border border-warning";
+      box.style.backgroundColor = "#fffaf0";
+      title.innerHTML = "⚠️ 部分反應 (PRAM 4-7)";
+      action.innerHTML = "<strong>動向：繼續留觀 / 考慮住院 (Admit)</strong><br>• 繼續給予 SABA 每小時吸入一次。<br>• 確保已投予全身性類固醇。<br>• 若持續 2-4 小時無顯著改善，安排收治一般病房。";
+      reEvalState = "部分反應 (PRAM 4-7)";
+    } else {
+      box.className = "result-box border border-danger";
+      box.style.backgroundColor = "#fff5f5";
+      title.innerHTML = "🚨 無反應或惡化 (PRAM 8-12)";
+      action.innerHTML = "<strong>動向：收治加護病房 (PICU)</strong><br>• 考慮連續性 SABA 吸入治療 (Continuous Albuterol)。<br>• 投予 IV Magnesium Sulfate (硫酸鎂)。<br>• 評估是否需使用 BiPAP 或插管。";
+      reEvalState = "無反應或惡化 (PRAM 8-12)";
+    }
+    reEvalAction = action.innerText;
   }
 
   function printOrder() {
     if (!latestAsthmaData) return;
-    
     document.getElementById('prtDateTime').innerText = new Date().toLocaleString('zh-TW');
     document.getElementById('prtWeight').innerText = latestAsthmaData.weight;
-    
     document.getElementById('prtScore').innerText = latestAsthmaData.pram;
     document.getElementById('prtSeverity').innerText = latestAsthmaData.severity;
     document.getElementById('prtGuideline').innerText = latestAsthmaData.guideline;
-
     document.getElementById('prtSalbutamol').innerText = latestAsthmaData.salbutamolDose;
-    document.getElementById('prtSalbutamolFreq').innerText = latestAsthmaData.salbutamolFreq;
     document.getElementById('prtIpratropium').innerText = latestAsthmaData.ipratropiumDose;
-    
     document.getElementById('prtPred').innerText = `${latestAsthmaData.predDose} mg`;
-    document.getElementById('prtDexa').innerText = `${latestAsthmaData.dexaDose} mg`;
     document.getElementById('prtMg').innerText = `${latestAsthmaData.mgDose} mg`;
+    
+    // 寫入再評估結果
+    document.getElementById('prtTreeEval').innerText = reEvalState;
+    document.getElementById('prtTreeAction').innerText = reEvalAction;
 
     window.print();
   }
