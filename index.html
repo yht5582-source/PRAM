@@ -5,87 +5,100 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>小兒急性氣喘發作處置計算機</title>
   <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="icons/icon-192.png">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
   <meta name="theme-color" content="#198754">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
   <style>
-    body { background-color: #f8f9fa; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    body { background-color: #f8f9fa; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, 'PingFang TC', 'Microsoft JhengHei', sans-serif; }
     .card { border: none; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 20px; }
     .card-header { background-color: #fff; border-bottom: 1px solid #eee; font-weight: bold; border-radius: 12px 12px 0 0 !important; }
     .result-box { background-color: #e9ecef; padding: 15px; border-radius: 8px; margin-bottom: 15px; }
     .result-title { font-size: 0.9rem; color: #6c757d; margin-bottom: 5px; }
     .result-value { font-size: 1.3rem; font-weight: bold; color: #212529; }
-    .drug-dose { font-size: 1.5rem; color: #d63384; font-weight: bold; }
+    .drug-dose { font-size: 1.35rem; color: #d63384; font-weight: bold; line-height: 1.25; }
+    .drug-note { font-size: 0.8rem; color: #555; margin-top: 4px; }
+    .drug-off { opacity: 0.45; }
     .severity-mild { color: #198754; }
     .severity-mod { color: #fd7e14; }
     .severity-sev { color: #dc3545; }
-    .tree-btn { border-radius: 20px; font-weight: bold; }
+    .severity-crit { color: #fff; background: #dc3545; border-radius: 6px; padding: 0 8px; }
+    .guideline-list { margin: 0; padding-left: 1.2rem; }
+    .guideline-list li { margin-bottom: 4px; }
+    .warn-list { margin: 0; padding-left: 1.2rem; font-size: 0.9rem; }
+    .src { font-size: 0.78rem; color: #6c757d; }
+    .pram-pts { float: right; color: #6c757d; font-weight: normal; }
+    #resultCol { position: sticky; top: 12px; align-self: flex-start; }
+    @media (max-width: 767.98px) { #resultCol { position: static; } }
 
     @media print {
       .d-print-none { display: none !important; }
-      body { background-color: #fff; color: #000; font-size: 12pt; }
+      body { background-color: #fff; color: #000; font-size: 11pt; }
       #print-section { display: block !important; }
-      .print-header { text-align: center; border-bottom: 2px solid #000; padding-bottom: 10px; margin-bottom: 20px; }
-      .print-row { display: flex; justify-content: space-between; margin-bottom: 15px; }
-      .print-box { border: 1px solid #000; padding: 15px; margin-bottom: 15px; border-radius: 5px; }
-      .print-table { width: 100%; border-collapse: collapse; margin-bottom: 15px; }
-      .print-table th, .print-table td { border: 1px solid #000; padding: 8px; text-align: left; }
+      .print-header { text-align: center; border-bottom: 2px solid #000; padding-bottom: 8px; margin-bottom: 14px; }
+      .print-row { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; }
+      .print-box { border: 1px solid #000; padding: 10px 14px; margin-bottom: 12px; border-radius: 5px; page-break-inside: avoid; }
+      .print-box h4 { font-size: 13pt; }
+      .print-table { width: 100%; border-collapse: collapse; margin-bottom: 8px; }
+      .print-table th, .print-table td { border: 1px solid #000; padding: 5px 8px; text-align: left; vertical-align: top; }
       .print-table th { background-color: #f2f2f2 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-      .signature-area { margin-top: 50px; text-align: right; }
+      .signature-area { margin-top: 36px; text-align: right; }
     }
   </style>
 </head>
 <body>
 
 <div class="container py-4 d-print-none">
-  <h2 class="text-center mb-4">小兒急性氣喘發作處置計算機</h2>
-  
+  <h2 class="text-center mb-1">小兒急性氣喘發作處置計算機</h2>
+  <p class="text-center text-muted small mb-4">PRAM 評分 · 依 GINA 2026 與 TREKK 2024 · 適用 ≥ 1 歲兒童</p>
+
   <div class="row">
     <!-- 左側輸入區 -->
     <div class="col-md-6">
       <div class="card">
         <div class="card-header text-success">1. 初始評估 (Initial PRAM)</div>
         <div class="card-body">
-          <form id="asthmaForm">
+          <form id="asthmaForm" onsubmit="return false">
             <div class="row mb-3">
               <div class="col-6">
-                <label class="form-label text-danger fw-bold">目前體重 (kg) *</label>
-                <input type="number" class="form-control border-danger" id="weight" step="0.1" min="1" required>
+                <label class="form-label text-danger fw-bold" for="weight">目前體重 (kg) *</label>
+                <input type="number" inputmode="decimal" class="form-control border-danger" id="weight" step="0.1" min="1" max="150" required>
               </div>
               <div class="col-6">
-                <label class="form-label">年齡 (選填)</label>
-                <input type="text" class="form-control" id="age">
+                <label class="form-label" for="age">年齡 (歲，選填)</label>
+                <input type="number" inputmode="decimal" class="form-control" id="age" step="0.1" min="0" max="18">
               </div>
             </div>
 
             <hr>
             <div class="mb-3">
-              <label class="form-label">1. 血氧飽和度 (O₂ Saturation)</label>
-              <select class="form-select" id="pramO2">
+              <label class="form-label" for="pramO2">1. 血氧飽和度 (室內空氣 SpO₂)</label>
+              <select class="form-select pram-item" id="pramO2">
                 <option value="0">≥ 95% (0分)</option>
                 <option value="1">92% - 94% (1分)</option>
-                <option value="2">< 92% (2分)</option>
+                <option value="2">&lt; 92% (2分)</option>
               </select>
             </div>
-            
+
             <div class="mb-3">
-              <label class="form-label">2. 胸骨上凹陷</label>
-              <select class="form-select" id="pramSupra">
+              <label class="form-label" for="pramSupra">2. 胸骨上凹陷</label>
+              <select class="form-select pram-item" id="pramSupra">
                 <option value="0">無 (0分)</option>
                 <option value="2">有凹陷 (2分)</option>
               </select>
             </div>
 
             <div class="mb-3">
-              <label class="form-label">3. 斜角肌收縮</label>
-              <select class="form-select" id="pramScalene">
+              <label class="form-label" for="pramScalene">3. 斜角肌收縮</label>
+              <select class="form-select pram-item" id="pramScalene">
                 <option value="0">無 (0分)</option>
                 <option value="2">有收縮 (2分)</option>
               </select>
             </div>
 
             <div class="mb-3">
-              <label class="form-label">4. 呼吸音 / 進入量</label>
-              <select class="form-select" id="pramAir">
+              <label class="form-label" for="pramAir">4. 呼吸音 / 進入量</label>
+              <select class="form-select pram-item" id="pramAir">
                 <option value="0">正常 (0分)</option>
                 <option value="1">底部減少 (1分)</option>
                 <option value="2">廣泛減少 (2分)</option>
@@ -93,9 +106,9 @@
               </select>
             </div>
 
-            <div class="mb-4">
-              <label class="form-label">5. 喘鳴音 (Wheezing)</label>
-              <select class="form-select" id="pramWheeze">
+            <div class="mb-3">
+              <label class="form-label" for="pramWheeze">5. 喘鳴音 (Wheezing)</label>
+              <select class="form-select pram-item" id="pramWheeze">
                 <option value="0">無 (0分)</option>
                 <option value="1">僅呼氣期 (1分)</option>
                 <option value="2">吸氣與呼氣期 (2分)</option>
@@ -103,75 +116,87 @@
               </select>
             </div>
 
-            <button type="button" class="btn btn-success w-100 py-2 mb-2" onclick="calculateAsthma()">產生處置計畫</button>
-            <button type="button" class="btn btn-outline-secondary w-100 py-2" id="printBtn" onclick="printOrder()" disabled>🖨️ 列印醫囑單 (PDF)</button>
+            <div class="form-check mb-2">
+              <input class="form-check-input" type="checkbox" id="impending">
+              <label class="form-check-label text-danger fw-bold" for="impending">瀕臨呼吸衰竭徵象：嗜睡/意識改變、發紺、呼吸費力減弱或 pCO₂ 上升</label>
+            </div>
+            <div class="form-check mb-4">
+              <input class="form-check-input" type="checkbox" id="anaphylaxis">
+              <label class="form-check-label" for="anaphylaxis">疑似合併過敏性休克 (anaphylaxis)</label>
+            </div>
+
+            <div id="inputWarn" class="alert alert-warning py-2 small" style="display:none"></div>
+
+            <button type="button" class="btn btn-outline-secondary w-100 py-2 mb-2" id="printBtn" onclick="printOrder()" disabled>🖨️ 列印醫囑單 (PDF)</button>
+            <button type="button" class="btn btn-link w-100 btn-sm text-muted" onclick="resetAll()">清除重填</button>
           </form>
         </div>
       </div>
     </div>
 
     <!-- 右側結果區 -->
-    <div class="col-md-6">
+    <div class="col-md-6" id="resultCol">
       <div class="card">
-        <div class="card-header text-primary">2. 臨床決策與藥物劑量</div>
+        <div class="card-header text-primary">2. 臨床決策與藥物劑量 <span class="small text-muted fw-normal">（輸入即時更新）</span></div>
         <div class="card-body">
-          
+
           <div class="result-box text-center">
             <div class="result-title">初始 PRAM 總分與嚴重度</div>
             <div class="result-value" id="resPramScore" style="font-size: 2rem;">--</div>
-            <div class="fw-bold mt-1" id="resSeverity">請先輸入參數</div>
+            <div class="fw-bold mt-1" id="resSeverity">請先輸入體重</div>
           </div>
 
           <h6 class="mt-3 text-secondary">急性期處置建議 (Initial Management)</h6>
           <div class="result-box" style="background-color: #fff3cd;">
-            <div id="resGuideline" class="fw-bold text-dark">--</div>
+            <div id="resGuideline" class="text-dark">--</div>
           </div>
 
           <h6 class="mt-3 text-secondary">藥物精算劑量表 (依體重)</h6>
-          <div class="row">
-            <div class="col-6 mb-2">
-              <div class="result-box border border-primary" style="background-color: #f0f8ff;">
-                <div class="result-title">SABA 霧化吸入液</div>
-                <div class="drug-dose" id="resSalbutamol">--</div>
-              </div>
-            </div>
-            <div class="col-6 mb-2">
-              <div class="result-box border border-info" style="background-color: #f0f8ff;">
-                <div class="result-title">SAMA 霧化吸入液</div>
-                <div class="drug-dose" id="resIpratropium">--</div>
-              </div>
-            </div>
-            <div class="col-6">
-              <div class="result-box border border-danger" style="background-color: #fff5f5;">
-                <div class="result-title">PO Prednisolone</div>
-                <div class="drug-dose" id="resPrednisolone">--</div>
-              </div>
-            </div>
-            <div class="col-6">
-              <div class="result-box border border-danger" style="background-color: #fff5f5;">
-                <div class="result-title">IV MgSO4 (重度保留)</div>
-                <div class="drug-dose" id="resMg">--</div>
-              </div>
-            </div>
+          <div class="row g-2" id="drugGrid">
+            <div class="col-6"><div class="result-box border border-primary h-100 mb-0" style="background-color: #f0f8ff;" id="boxSaba">
+              <div class="result-title">Salbutamol (SABA)</div>
+              <div class="drug-dose" id="resSalbutamol">--</div><div class="drug-note" id="noteSalbutamol"></div></div></div>
+            <div class="col-6"><div class="result-box border border-info h-100 mb-0" style="background-color: #f0f8ff;" id="boxSama">
+              <div class="result-title">Ipratropium (SAMA)</div>
+              <div class="drug-dose" id="resIpratropium">--</div><div class="drug-note" id="noteIpratropium"></div></div></div>
+            <div class="col-6"><div class="result-box border border-danger h-100 mb-0" style="background-color: #fff5f5;" id="boxDex">
+              <div class="result-title">PO Dexamethasone (首選)</div>
+              <div class="drug-dose" id="resDex">--</div><div class="drug-note" id="noteDex"></div></div></div>
+            <div class="col-6"><div class="result-box border border-danger h-100 mb-0" style="background-color: #fff5f5;" id="boxPred">
+              <div class="result-title">PO Prednisolone (替代)</div>
+              <div class="drug-dose" id="resPrednisolone">--</div><div class="drug-note" id="notePred"></div></div></div>
+            <div class="col-6"><div class="result-box border border-danger h-100 mb-0" style="background-color: #fff5f5;" id="boxIv">
+              <div class="result-title">IV 類固醇 (無法口服/瀕臨衰竭)</div>
+              <div class="drug-dose" id="resIvSteroid">--</div><div class="drug-note" id="noteIvSteroid"></div></div></div>
+            <div class="col-6"><div class="result-box border border-danger h-100 mb-0" style="background-color: #fff5f5;" id="boxMg">
+              <div class="result-title">IV MgSO₄</div>
+              <div class="drug-dose" id="resMg">--</div><div class="drug-note" id="noteMg"></div></div></div>
           </div>
+          <div id="extraDrugs" class="small mt-2"></div>
 
-          <!-- 1小時後再評估模組 (初始隱藏) -->
+          <!-- 再評估模組 -->
           <div id="reEvaluationSection" style="display: none; margin-top: 20px; border-top: 2px dashed #ccc; padding-top: 20px;">
-            <h5 class="text-primary mb-3">🕒 治療 1 小時後決策樹 (Re-evaluation)</h5>
-            <p class="text-muted small">請依據第一階段治療後的反應，選擇目前新的 PRAM 分數：</p>
-            
-            <div class="d-flex justify-content-between mb-3">
-              <button class="btn btn-outline-success tree-btn flex-fill mx-1" onclick="updateDecisionTree(0)">0-3 分<br>(反應良好)</button>
-              <button class="btn btn-outline-warning tree-btn flex-fill mx-1" onclick="updateDecisionTree(4)">4-7 分<br>(部分反應)</button>
-              <button class="btn btn-outline-danger tree-btn flex-fill mx-1" onclick="updateDecisionTree(8)">8-12 分<br>(無反應/惡化)</button>
+            <h5 class="text-primary mb-2">🕒 治療後再評估 (Re-evaluation)</h5>
+            <p class="text-muted small mb-2">依第一階段治療後的反應重新評分（GINA：1 小時內或更早再評估）。</p>
+            <div class="row g-2 mb-2">
+              <div class="col-12">
+                <label class="form-label small mb-1" for="reTime">評估時間點</label>
+                <select class="form-select form-select-sm" id="reTime">
+                  <option value="1h">治療第 1 小時後</option>
+                  <option value="2-4h">2–4 小時</option>
+                  <option value="4-6h">類固醇後 &gt; 4–6 小時</option>
+                </select>
+              </div>
             </div>
+            <div class="row g-2 mb-3" id="reItems"></div>
 
             <div class="result-box border" id="treeResultBox" style="background-color: #fff; display: none;">
               <div class="result-title" id="treeTitle">--</div>
-              <div class="result-value" id="treeAction" style="font-size: 1.1rem; color: #333;">--</div>
+              <div id="treeAction" style="font-size: 1rem; color: #333;">--</div>
             </div>
           </div>
 
+          <p class="src mt-3 mb-0">參考：GINA 2026 Summary Guide Figure 9（兒童 &lt;18 歲 PRAM 1–3 輕度、4–7 中度、8–12 重度、11–12 危及生命）；TREKK Bottom Line Recommendations: Asthma (v2.1, 2024) 與 Severe Asthma Algorithm / Order Set (v2.0, 2024)。本工具僅供臨床決策輔助，實際處置請依病人狀況與院內規範。</p>
         </div>
       </div>
     </div>
@@ -184,137 +209,324 @@
     <h2>小兒急性氣喘發作處置醫囑單</h2>
   </div>
   <div class="print-row">
-    <div><strong>體重 (Weight):</strong> <span id="prtWeight"></span> kg</div>
+    <div><strong>體重:</strong> <span id="prtWeight"></span> kg</div>
+    <div><strong>年齡:</strong> <span id="prtAge"></span></div>
     <div><strong>評估時間:</strong> <span id="prtDateTime"></span></div>
   </div>
   <div class="print-box">
     <h4>一、 初始評估與處置</h4>
-    <p><strong>PRAM 總分:</strong> <span id="prtScore"></span> 分 (<span id="prtSeverity"></span>)</p>
-    <p><strong>處置方針:</strong> <span id="prtGuideline"></span></p>
+    <p class="mb-1"><strong>PRAM 總分:</strong> <span id="prtScore"></span> 分 (<span id="prtSeverity"></span>)</p>
+    <p class="mb-1 small" id="prtItems"></p>
+    <div><strong>處置方針:</strong><ul id="prtGuideline" class="mb-0"></ul></div>
   </div>
   <div class="print-box">
     <h4>二、 藥物劑量</h4>
-    <ul>
-      <li><strong>Salbutamol (SABA):</strong> <span id="prtSalbutamol"></span></li>
-      <li><strong>Ipratropium (SAMA):</strong> <span id="prtIpratropium"></span></li>
-      <li><strong>Prednisolone (PO):</strong> <span id="prtPred"></span> (1-2 mg/kg, Max 60mg)</li>
-      <li><strong>MgSO4 (IV):</strong> <span id="prtMg"></span> (50 mg/kg, Max 2g)</li>
-    </ul>
+    <table class="print-table">
+      <thead><tr><th style="width:28%">藥物</th><th>劑量</th><th style="width:34%">計算依據</th></tr></thead>
+      <tbody id="prtDrugs"></tbody>
+    </table>
   </div>
   <div class="print-box">
-    <h4>三、 1 小時後追蹤決策紀錄</h4>
-    <p><strong>治療後評估反應:</strong> <span id="prtTreeEval">尚未評估</span></p>
-    <p><strong>後續動向:</strong> <span id="prtTreeAction">--</span></p>
+    <h4>三、 治療後追蹤決策紀錄</h4>
+    <p class="mb-1"><strong>治療後評估反應:</strong> <span id="prtTreeEval">尚未評估</span></p>
+    <div><strong>後續動向:</strong> <span id="prtTreeAction">--</span></div>
   </div>
+  <div class="signature-area">醫師簽章：____________________</div>
 </div>
 
 <script>
-  let latestAsthmaData = null;
-  let reEvalState = "尚未評估";
-  let reEvalAction = "--";
+/*ENGINE-START*/
+const PRAM = (() => {
+  const ITEMS = [
+    { id: 'O2', label: '血氧飽和度', opts: [['≥ 95%', 0], ['92–94%', 1], ['< 92%', 2]] },
+    { id: 'Supra', label: '胸骨上凹陷', opts: [['無', 0], ['有', 2]] },
+    { id: 'Scalene', label: '斜角肌收縮', opts: [['無', 0], ['有', 2]] },
+    { id: 'Air', label: '呼吸音進入量', opts: [['正常', 0], ['底部減少', 1], ['廣泛減少', 2], ['極少或無', 3]] },
+    { id: 'Wheeze', label: '喘鳴音', opts: [['無', 0], ['僅呼氣期', 1], ['吸氣與呼氣期', 2], ['不需聽診器可聽見/寂靜胸', 3]] },
+  ];
+  const r1 = x => Math.round(x * 10) / 10;
+  const capped = (perKg, max, wt, digits) => {
+    const raw = perKg * wt;
+    const v = raw >= max ? max : (digits ? r1(raw) : Math.round(raw));
+    return { dose: v, capped: raw >= max };
+  };
 
-  function calculateAsthma() {
-    const weight = parseFloat(document.getElementById('weight').value);
-    if (isNaN(weight) || weight <= 0) { alert("請輸入有效的體重！"); return; }
-
-    const pram = parseInt(document.getElementById('pramO2').value) +
-                 parseInt(document.getElementById('pramSupra').value) +
-                 parseInt(document.getElementById('pramScalene').value) +
-                 parseInt(document.getElementById('pramAir').value) +
-                 parseInt(document.getElementById('pramWheeze').value);
-
-    let severity = "", severityClass = "", guideline = "";
-
-    if (pram <= 3) {
-      severity = "輕度 (Mild)"; severityClass = "severity-mild";
-      guideline = "給予 SABA 治療，觀察 1 小時。若改善可考慮開立口服類固醇後 Discharge。";
-    } else if (pram <= 7) {
-      severity = "中度 (Moderate)"; severityClass = "severity-mod";
-      guideline = "給予 SABA + SAMA 霧化治療，給予口服全身性類固醇。監測氧氣需求，1 小時後重新評估。";
-    } else {
-      severity = "重度 (Severe)"; severityClass = "severity-sev";
-      guideline = "立即給予高濃度氧氣，連續 3 劑 SABA+SAMA。建立靜脈輸液，給予 IV 類固醇，準備 IV MgSO4。";
+  function score(items) {
+    let s = 0;
+    for (const it of ITEMS) {
+      const v = Number(items[it.id]);
+      if (!it.opts.some(o => o[1] === v)) throw new Error('invalid ' + it.id);
+      s += v;
     }
-
-    const salbutamolDose = weight < 20 ? "2.5 mg" : "5.0 mg";
-    const ipratropiumDose = weight < 20 ? "250 mcg" : "500 mcg";
-    
-    let predDose = Math.round(weight * 1.5); 
-    if (predDose > 60) predDose = 60;
-    
-    let mgDose = Math.round(weight * 50);
-    if (mgDose > 2000) mgDose = 2000;
-
-    const scoreEl = document.getElementById('resPramScore');
-    scoreEl.innerText = `${pram} 分`;
-    scoreEl.className = `result-value ${severityClass}`;
-    
-    document.getElementById('resSeverity').innerText = severity;
-    document.getElementById('resSeverity').className = `fw-bold mt-1 ${severityClass}`;
-    document.getElementById('resGuideline').innerText = guideline;
-    
-    document.getElementById('resSalbutamol').innerText = salbutamolDose;
-    document.getElementById('resIpratropium').innerText = ipratropiumDose;
-    document.getElementById('resPrednisolone').innerText = `${predDose} mg`;
-    document.getElementById('resMg').innerText = `${mgDose} mg`;
-
-    // 顯示 1小時再評估區塊
-    document.getElementById('reEvaluationSection').style.display = "block";
-    document.getElementById('treeResultBox').style.display = "none";
-    reEvalState = "尚未評估";
-    reEvalAction = "--";
-
-    latestAsthmaData = { weight, pram, severity, guideline, salbutamolDose, ipratropiumDose, predDose, mgDose };
-    document.getElementById('printBtn').disabled = false;
+    return s;
   }
 
-  // 1小時後決策樹邏輯
-  function updateDecisionTree(newPram) {
-    const box = document.getElementById('treeResultBox');
-    const title = document.getElementById('treeTitle');
-    const action = document.getElementById('treeAction');
-    
-    box.style.display = "block";
+  // GINA 2026 Fig 9 / TREKK: 1–3 mild, 4–7 moderate, 8–12 severe; 11–12 or impending failure = life-threatening
+  function severity(s, impending) {
+    if (impending || s >= 11) return { key: 'crit', label: '危及生命 / 瀕臨呼吸衰竭', cls: 'severity-crit' };
+    if (s >= 8) return { key: 'sev', label: '重度 (Severe)', cls: 'severity-sev' };
+    if (s >= 4) return { key: 'mod', label: '中度 (Moderate)', cls: 'severity-mod' };
+    return { key: 'mild', label: s === 0 ? '輕度範圍（目前無呼吸窘迫）' : '輕度 (Mild)', cls: 'severity-mild' };
+  }
 
-    if (newPram <= 3) {
-      box.className = "result-box border border-success";
-      box.style.backgroundColor = "#f0fff4";
-      title.innerHTML = "✅ 反應良好 (PRAM 0-3)";
-      action.innerHTML = "<strong>動向：準備出院 (Discharge)</strong><br>• 開立 3-5 天口服類固醇療程。<br>• 衛教 SABA MDI 使用時機 (需搭配吸藥輔助器 Spacer)。<br>• 安排 1-2 天內門診追蹤。";
-      reEvalState = "反應良好 (PRAM 0-3)";
-    } else if (newPram <= 7) {
-      box.className = "result-box border border-warning";
-      box.style.backgroundColor = "#fffaf0";
-      title.innerHTML = "⚠️ 部分反應 (PRAM 4-7)";
-      action.innerHTML = "<strong>動向：繼續留觀 / 考慮住院 (Admit)</strong><br>• 繼續給予 SABA 每小時吸入一次。<br>• 確保已投予全身性類固醇。<br>• 若持續 2-4 小時無顯著改善，安排收治一般病房。";
-      reEvalState = "部分反應 (PRAM 4-7)";
+  function doses(wt) {
+    const big = wt >= 20;
+    return {
+      salbutamol: { mdi: big ? 10 : 5, neb: big ? 5 : 2.5, cont: big ? 15 : 7.5 },
+      ipratropium: { mdi: 4, neb: 250, cont: 750 },
+      dex: capped(0.6, 12, wt, true),
+      predEd: capped(2, 60, wt),
+      predHome: capped(1, 60, wt),
+      methylpred: capped(2, 80, wt),
+      hydrocort: capped(8, 400, wt),
+      mg: capped(50, 2000, wt),
+      bolus: capped(20, 1000, wt),
+      epi: { dose: Math.min(0.5, Math.max(0.1, Math.round(wt * 0.01 * 100) / 100)) },
+    };
+  }
+
+  function guideline(sev, anaphylaxis) {
+    const g = [];
+    if (anaphylaxis) g.push('疑似過敏性休克：先給 IM epinephrine，再處理氣喘。');
+    if (sev === 'mild') {
+      g.push('Salbutamol MDI + spacer 1 劑，之後需要時 (PRN) 再給。');
+      g.push('口服類固醇非常規；若有慢性症狀、頻繁發作或近期住院可考慮。');
+      g.push('1 小時內再評估 PRAM。');
+    } else if (sev === 'mod') {
+      g.push('Salbutamol MDI + spacer q20min × 3 劑，第 1 小時內與 ipratropium 交替 2–3 劑。');
+      g.push('第一劑支氣管擴張劑後給口服類固醇（dexamethasone 首選）。');
+      g.push('需要時給氧，目標 SpO₂ 92–95%；1 小時後再評估 PRAM。');
+    } else if (sev === 'sev') {
+      g.push('給氧（目標 SpO₂ 92–95%），持續監測。');
+      g.push('第 1 小時：連續霧化 salbutamol + ipratropium（或 q20min × 3 劑），之後依反應 PRN 或持續 salbutamol。');
+      g.push('第 1 小時內給口服類固醇。');
+      g.push('第 1 小時後仍中重度窘迫：加 IV MgSO₄ 並持續支氣管擴張劑。');
     } else {
-      box.className = "result-box border border-danger";
-      box.style.backgroundColor = "#fff5f5";
-      title.innerHTML = "🚨 無反應或惡化 (PRAM 8-12)";
-      action.innerHTML = "<strong>動向：收治加護病房 (PICU)</strong><br>• 考慮連續性 SABA 吸入治療 (Continuous Albuterol)。<br>• 投予 IV Magnesium Sulfate (硫酸鎂)。<br>• 評估是否需使用 BiPAP 或插管。";
-      reEvalState = "無反應或惡化 (PRAM 8-12)";
+      g.push('連續心肺監測、給氧，必要時呼吸支持；立即聯絡 PICU / 轉診團隊。');
+      g.push('第 1 小時：連續霧化 salbutamol + ipratropium，給 IV 類固醇，之後持續 salbutamol。');
+      g.push('IV MgSO₄ 列為初始處置；需要時給等張輸液維持灌流。');
+      g.push('呼吸衰竭徵象可考慮 HFNC 或 NIV；插管為高風險最後手段，宜與 PICU 討論。');
     }
-    reEvalAction = action.innerText;
+    return g;
+  }
+
+  function warnings(wt, age) {
+    const w = [];
+    if (wt < 3 || wt > 150) w.push('體重 ' + wt + ' kg 超出合理範圍，請確認單位與數值。');
+    if (age !== null && age !== undefined && !isNaN(age)) {
+      if (age < 1) w.push('未滿 1 歲：TREKK 建議不適用，喘鳴多為細支氣管炎，請另行評估。');
+      if (age >= 18) w.push('≥ 18 歲：請改用成人急性氣喘處置（PRAM 適用於 < 18 歲）。');
+      if (age >= 1 && age < 18 && wt > 0) {
+        const exp = age < 1 ? null : age * 2 + 8; // APLS 估計體重 (1–10 歲)
+        if (exp && age <= 10 && (wt > exp * 2.2 || wt < exp * 0.45)) w.push('體重與年齡估計值（約 ' + Math.round(exp) + ' kg）差距大，請確認。');
+      }
+    }
+    return w;
+  }
+
+  // 再評估：TREKK 住院 / 轉診 / 出院條件 + GINA 出院前安排
+  function reassess(s, time, initialScore, satScore) {
+    const lines = [];
+    if (s <= 3) {
+      const ready = time !== '1h';
+      lines.push(ready ? '符合出院條件（PRAM ≤ 3 持續至最後一劑支氣管擴張劑後 1–2 小時）' : '反應良好；最後一劑支氣管擴張劑後持續觀察 1–2 小時，PRAM 仍 ≤ 3 即可出院');
+      if (satScore >= 2) lines.push('⚠ 室內空氣 SpO₂ < 92%，未達出院標準（需 ≥ 92%）');
+      lines.push('出院帶藥：salbutamol MDI + spacer、氣喘行動計畫與吸藥技巧衛教');
+      if (initialScore >= 4) {
+        lines.push('初始 PRAM ≥ 4：出院帶每日吸入型類固醇 (ICS) 至回診');
+        lines.push('類固醇：dexamethasone 可再給第 2 天 1 劑（選擇性），或 prednisolone 1 mg/kg/day（max 60 mg）再 4 天共 5 天');
+      }
+      lines.push('回診：兒童 2–5 天內（GINA），最遲 7 天內（TREKK）');
+      return { key: 'good', title: '✅ 反應良好 (PRAM 0–3)', head: '動向：準備出院 (Discharge)', lines };
+    }
+    if (s <= 7) {
+      lines.push('依反應持續 salbutamol（ipratropium 僅限第 1 小時）');
+      lines.push('確認已給全身性類固醇');
+      if (time === '1h') lines.push('第 1 小時後仍中度窘迫：考慮 IV MgSO₄ 並持續支氣管擴張劑');
+      if (time === '4-6h') lines.push('類固醇後 > 4–6 小時 PRAM 仍 ≥ 4：安排住院');
+      else lines.push('若類固醇後 4–6 小時 PRAM 仍 ≥ 4：安排住院');
+      return { key: 'partial', title: '⚠️ 部分反應 (PRAM 4–7)', head: time === '4-6h' ? '動向：收治住院 (Admit)' : '動向：繼續留觀，持續再評估', lines };
+    }
+    lines.push('持續（連續霧化）salbutamol');
+    lines.push('IV MgSO₄（若尚未給）');
+    lines.push('未給則改 IV 類固醇；給氧並持續監測');
+    lines.push('呼吸衰竭徵象：考慮 HFNC / NIV；插管為最後手段');
+    if (time !== '1h') lines.push('治療 1–2 小時後 PRAM 仍 ≥ 8：聯絡 PICU / 轉診團隊');
+    else lines.push('若 1–2 小時後 PRAM 仍 ≥ 8：聯絡 PICU / 轉診團隊');
+    return { key: 'poor', title: '🚨 無反應或惡化 (PRAM 8–12)', head: '動向：加護病房 (PICU) / 轉診', lines };
+  }
+
+  return { ITEMS, score, severity, doses, guideline, warnings, reassess };
+})();
+if (typeof module !== 'undefined') module.exports = PRAM;
+/*ENGINE-END*/
+
+  const $ = id => document.getElementById(id);
+  let latest = null;
+  let reEval = null;
+
+  const fmt = (d, unit) => `${d.dose} ${unit}${d.capped ? '（已達上限）' : ''}`;
+
+  function readItems(prefix) {
+    const o = {};
+    for (const it of PRAM.ITEMS) o[it.id] = Number($(prefix + it.id).value);
+    return o;
+  }
+
+  function setDrug(boxId, valId, noteId, html, note, active) {
+    $(valId).innerHTML = html;
+    $(noteId).innerHTML = note;
+    $(boxId).classList.toggle('drug-off', !active);
+  }
+
+  function calculateAsthma() {
+    const items = readItems('pram');
+    const s = PRAM.score(items);
+    const impending = $('impending').checked;
+    const anaph = $('anaphylaxis').checked;
+    const sev = PRAM.severity(s, impending);
+    const wt = parseFloat($('weight').value);
+    const ageRaw = $('age').value.trim();
+    const age = ageRaw === '' ? null : parseFloat(ageRaw);
+
+    const scoreEl = $('resPramScore');
+    scoreEl.textContent = `${s} 分`;
+    scoreEl.className = `result-value ${sev.cls === 'severity-crit' ? 'severity-sev' : sev.cls}`;
+    $('resSeverity').textContent = sev.label;
+    $('resSeverity').className = `fw-bold mt-1 ${sev.cls}`;
+
+    const g = PRAM.guideline(sev.key, anaph);
+    $('resGuideline').innerHTML = '<ul class="guideline-list">' + g.map(x => `<li>${x}</li>`).join('') + '</ul>';
+
+    const warn = $('inputWarn');
+    if (isNaN(wt) || wt <= 0) {
+      warn.style.display = 'block';
+      warn.textContent = '請輸入體重以計算藥物劑量。';
+      ['resSalbutamol', 'resIpratropium', 'resDex', 'resPrednisolone', 'resIvSteroid', 'resMg'].forEach(id => $(id).textContent = '--');
+      ['noteSalbutamol', 'noteIpratropium', 'noteDex', 'notePred', 'noteIvSteroid', 'noteMg'].forEach(id => $(id).textContent = '');
+      $('extraDrugs').innerHTML = '';
+      $('reEvaluationSection').style.display = 'none';
+      $('printBtn').disabled = true;
+      latest = null;
+      return;
+    }
+    const ws = PRAM.warnings(wt, age);
+    warn.style.display = ws.length ? 'block' : 'none';
+    warn.innerHTML = ws.length ? '<ul class="warn-list">' + ws.map(x => `<li>${x}</li>`).join('') + '</ul>' : '';
+
+    const d = PRAM.doses(wt);
+    const k = sev.key;
+    const sabaFreq = k === 'mild' ? '1 劑，之後 PRN' : 'q20min × 3';
+    setDrug('boxSaba', 'resSalbutamol', 'noteSalbutamol',
+      `${d.salbutamol.mdi} puffs<br><span style="font-size:1rem">或霧化 ${d.salbutamol.neb} mg</span>`,
+      `MDI 100 mcg/puff + spacer，${sabaFreq}${k === 'sev' || k === 'crit' ? `；連續霧化 ${d.salbutamol.cont} mg/hr` : ''}（${wt >= 20 ? '≥' : '<'} 20 kg）`, true);
+    setDrug('boxSama', 'resIpratropium', 'noteIpratropium',
+      `${d.ipratropium.mdi} puffs<br><span style="font-size:1rem">或霧化 ${d.ipratropium.neb} mcg</span>`,
+      `MDI 20 mcg/puff，q20min × 3，僅第 1 小時${k === 'sev' || k === 'crit' ? `；連續霧化 ${d.ipratropium.cont} mcg/1 hr` : ''}${k === 'mild' ? '；輕度不需' : ''}`, k !== 'mild');
+    setDrug('boxDex', 'resDex', 'noteDex', fmt(d.dex, 'mg'),
+      `0.6 mg/kg PO/IV × 1（max 12 mg）${k === 'mild' ? '；輕度非常規' : ''}`, k !== 'mild');
+    setDrug('boxPred', 'resPrednisolone', 'notePred', fmt(d.predEd, 'mg'),
+      `急診首劑 2 mg/kg（max 60 mg）；之後 ${fmt(d.predHome, 'mg')}/day × 4 天（1 mg/kg）`, k !== 'mild');
+    setDrug('boxIv', 'resIvSteroid', 'noteIvSteroid',
+      `Methylpred ${fmt(d.methylpred, 'mg')}`,
+      `2 mg/kg（max 80 mg）；或 hydrocortisone ${fmt(d.hydrocort, 'mg')}（8 mg/kg, max 400 mg）。牛奶蛋白過敏避免 methylprednisolone`, k === 'crit');
+    setDrug('boxMg', 'resMg', 'noteMg', fmt(d.mg, 'mg'),
+      `50 mg/kg（max 2 g）IV ≥ 20 分鐘；輸注中 q5min 量血壓${k === 'crit' ? '' : '；重度第 1 小時後仍窘迫時給'}`, k === 'sev' || k === 'crit');
+
+    const extra = [];
+    if (k === 'crit') extra.push(`<b>等張輸液 bolus：</b>NS/RL ${fmt(d.bolus, 'mL')}（20 mL/kg, max 1000 mL）`);
+    if (anaph) extra.push(`<b>Epinephrine IM (1 mg/mL)：</b>${d.epi.dose} mg 大腿前外側（0.01 mg/kg, min 0.1, max 0.5 mg）`);
+    $('extraDrugs').innerHTML = extra.map(x => `<div class="alert alert-danger py-1 px-2 mb-1">${x}</div>`).join('');
+
+    $('reEvaluationSection').style.display = 'block';
+    latest = { wt, age, s, items, sev, guide: g, d, anaph };
+    $('printBtn').disabled = false;
+    updateReeval();
+  }
+
+  function buildReItems() {
+    $('reItems').innerHTML = PRAM.ITEMS.map(it => `
+      <div class="col-6 col-lg-4"><label class="form-label small mb-1" for="re${it.id}">${it.label}</label>
+      <select class="form-select form-select-sm re-item" id="re${it.id}"><option value="">--</option>${it.opts.map(o => `<option value="${o[1]}">${o[0]} (${o[1]})</option>`).join('')}</select></div>`).join('');
+  }
+
+  function updateReeval() {
+    const box = $('treeResultBox');
+    const sels = PRAM.ITEMS.map(it => $('re' + it.id).value);
+    if (!latest || sels.some(v => v === '')) { box.style.display = 'none'; reEval = null; return; }
+    const s = PRAM.score(readItems('re'));
+    const time = $('reTime').value;
+    const r = PRAM.reassess(s, time, latest.s, Number($('reO2').value));
+    const styles = { good: ['border-success', '#f0fff4'], partial: ['border-warning', '#fffaf0'], poor: ['border-danger', '#fff5f5'] };
+    box.className = 'result-box border ' + styles[r.key][0];
+    box.style.backgroundColor = styles[r.key][1];
+    box.style.display = 'block';
+    $('treeTitle').textContent = `再評估 PRAM ${s} 分 · ${r.title}`;
+    $('treeAction').innerHTML = `<strong>${r.head}</strong><ul class="guideline-list mt-1">${r.lines.map(x => `<li>${x}</li>`).join('')}</ul>`;
+    reEval = { s, time: $('reTime').selectedOptions[0].textContent, r };
+  }
+
+  function resetAll() {
+    $('asthmaForm').reset();
+    document.querySelectorAll('.re-item').forEach(el => el.value = '');
+    $('reTime').value = '1h';
+    $('resPramScore').textContent = '--';
+    $('resPramScore').className = 'result-value';
+    $('resSeverity').textContent = '請先輸入體重';
+    $('resSeverity').className = 'fw-bold mt-1';
+    $('inputWarn').style.display = 'none';
+    calculateAsthma();
+    $('inputWarn').style.display = 'none';
   }
 
   function printOrder() {
-    if (!latestAsthmaData) return;
-    document.getElementById('prtDateTime').innerText = new Date().toLocaleString('zh-TW');
-    document.getElementById('prtWeight').innerText = latestAsthmaData.weight;
-    document.getElementById('prtScore').innerText = latestAsthmaData.pram;
-    document.getElementById('prtSeverity').innerText = latestAsthmaData.severity;
-    document.getElementById('prtGuideline').innerText = latestAsthmaData.guideline;
-    document.getElementById('prtSalbutamol').innerText = latestAsthmaData.salbutamolDose;
-    document.getElementById('prtIpratropium').innerText = latestAsthmaData.ipratropiumDose;
-    document.getElementById('prtPred').innerText = `${latestAsthmaData.predDose} mg`;
-    document.getElementById('prtMg').innerText = `${latestAsthmaData.mgDose} mg`;
-    
-    // 寫入再評估結果
-    document.getElementById('prtTreeEval').innerText = reEvalState;
-    document.getElementById('prtTreeAction').innerText = reEvalAction;
-
+    if (!latest) return;
+    const L = latest, d = L.d;
+    $('prtDateTime').textContent = new Date().toLocaleString('zh-TW');
+    $('prtWeight').textContent = L.wt;
+    $('prtAge').textContent = L.age === null || isNaN(L.age) ? '未填' : `${L.age} 歲`;
+    $('prtScore').textContent = L.s;
+    $('prtSeverity').textContent = L.sev.label;
+    $('prtItems').textContent = PRAM.ITEMS.map(it => `${it.label} ${it.opts.find(o => o[1] === L.items[it.id])[0]} (${L.items[it.id]})`).join('；')
+      + ($('impending').checked ? '；瀕臨呼吸衰竭徵象' : '');
+    $('prtGuideline').innerHTML = L.guide.map(x => `<li>${x}</li>`).join('');
+    // 只列出此嚴重度適用的藥物，避免醫囑單出現不需要的處方
+    const k = L.sev.key, sevPlus = k === 'sev' || k === 'crit';
+    const rows = [
+      ['Salbutamol (SABA)', `MDI ${d.salbutamol.mdi} puffs 或霧化 ${d.salbutamol.neb} mg，${k === 'mild' ? '1 劑後 PRN' : 'q20min × 3'}${sevPlus ? `（或連續霧化 ${d.salbutamol.cont} mg/hr）` : ''}`, `${L.wt >= 20 ? '≥' : '<'} 20 kg 劑量`],
+    ];
+    if (k !== 'mild') rows.push(
+      ['Ipratropium (SAMA)', `MDI ${d.ipratropium.mdi} puffs 或霧化 ${d.ipratropium.neb} mcg，q20min × 3${sevPlus ? `（或連續霧化 ${d.ipratropium.cont} mcg/1 hr）` : ''}`, '僅第 1 小時'],
+      ['Dexamethasone PO/IV（首選）', fmt(d.dex, 'mg'), '0.6 mg/kg, max 12 mg'],
+      ['或 Prednisolone PO', `${fmt(d.predEd, 'mg')}（首劑）；${fmt(d.predHome, 'mg')}/day × 4 天`, '2 mg/kg 首劑 / 1 mg/kg/day, max 60 mg']);
+    if (k === 'crit') rows.push(
+      ['Methylprednisolone IV', `${fmt(d.methylpred, 'mg')}（或 hydrocortisone ${fmt(d.hydrocort, 'mg')}）`, '2 mg/kg, max 80 mg / 8 mg/kg, max 400 mg'],
+      ['NS/RL bolus', fmt(d.bolus, 'mL'), '20 mL/kg, max 1000 mL']);
+    if (sevPlus) rows.push(['MgSO₄ IV', `${fmt(d.mg, 'mg')}，≥ 20 分鐘${k === 'crit' ? '' : '（第 1 小時後仍窘迫時）'}`, '50 mg/kg, max 2 g']);
+    if (L.anaph) rows.push(['Epinephrine IM', `${d.epi.dose} mg`, '0.01 mg/kg, max 0.5 mg']);
+    $('prtDrugs').innerHTML = rows.map(r => `<tr><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td></tr>`).join('');
+    if (reEval) {
+      $('prtTreeEval').textContent = `${reEval.time}：PRAM ${reEval.s} 分 — ${reEval.r.title.replace(/^\S+\s/, '')}`;
+      $('prtTreeAction').innerHTML = `<strong>${reEval.r.head.replace(/^動向：/, '')}</strong><ul class="mb-0">${reEval.r.lines.map(x => `<li>${x}</li>`).join('')}</ul>`;
+    } else {
+      $('prtTreeEval').textContent = '尚未評估';
+      $('prtTreeAction').textContent = '--';
+    }
     window.print();
+  }
+
+  buildReItems();
+  document.querySelectorAll('#asthmaForm input, #asthmaForm select').forEach(el => {
+    el.addEventListener('input', calculateAsthma);
+    el.addEventListener('change', calculateAsthma);
+  });
+  $('reTime').addEventListener('change', updateReeval);
+  document.querySelectorAll('.re-item').forEach(el => el.addEventListener('change', updateReeval));
+  calculateAsthma();
+  $('inputWarn').style.display = 'none';
+
+  if ('serviceWorker' in navigator && location.protocol !== 'file:') {
+    navigator.serviceWorker.register('sw.js').catch(() => {});
   }
 </script>
 
