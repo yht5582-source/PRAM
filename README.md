@@ -11,6 +11,7 @@
     *   全身性類固醇：Dexamethasone 0.6 mg/kg (max 12 mg, 首選)、Prednisolone 2 mg/kg 首劑 / 1 mg/kg/day (max 60 mg)、Methylprednisolone IV 2 mg/kg (max 80 mg)、Hydrocortisone IV 8 mg/kg (max 400 mg)
     *   重度急救藥物：IV Magnesium Sulfate 50 mg/kg (max 2 g)、等張輸液 bolus、過敏性休克時 IM epinephrine
 *   **治療後再評估：** 以同樣 5 項重新評分，配合時間點（1 小時 / 2–4 小時 / 類固醇後 > 4–6 小時）給出出院、住院或 PICU 建議（TREKK 標準）。
+*   **高風險 ICS 提示：** 勾選 TREKK 四項高風險因子任一項時，初始 PRAM ≤ 3 的出院建議會提示考慮低／起始劑量 ICS。
 *   **醫囑單列印匯出 (PDF Export)：** 內建隱藏式 A4 醫囑單排版，一鍵點擊即可將病患資料、PRAM 評分與精算後的藥物劑量轉存為 PDF 檔。
 *   **教學分頁：** 示範病例 6 例（`#cases`，可帶入計算機）、考題 20 題（`#quiz`，基礎 10 + 高階 10，附解析）、心智圖（`#map`）。
 *   **離線支援 (PWA)：** 支援無網際網路的環境（如急診室地下室），可透過手機瀏覽器直接安裝至主畫面作為本機 APP 使用。
