@@ -31,6 +31,69 @@
     #resultCol { position: sticky; top: 12px; align-self: flex-start; }
     @media (max-width: 767.98px) { #resultCol { position: static; } }
 
+    /* 分頁 */
+    .main-tabs .nav-link { color: #146c43; font-weight: 600; border-radius: 8px; }
+    .main-tabs .nav-link.active { background-color: #198754; color: #fff; }
+    [hidden] { display: none !important; }
+
+    /* 示範病例 */
+    .case-h { color: #146c43; font-size: 0.95rem; font-weight: 700; margin-bottom: 6px; }
+    .case-list { margin: 0; padding-left: 1.2rem; font-size: 0.92rem; }
+    .case-list li { margin-bottom: 3px; }
+    .case-table th { font-weight: 600; white-space: nowrap; }
+    .case-table th, .case-table td { font-size: 0.88rem; }
+    .case-steps dt { font-size: 0.92rem; }
+    .case-steps dd { font-size: 0.92rem; margin-bottom: 8px; }
+    .case-teach { background: #e8f5ee; border-left: 4px solid #198754; padding: 10px 12px; border-radius: 4px; font-size: 0.93rem; }
+    .case-tag { font-size: 0.78rem; font-weight: 600; padding: 2px 10px; border-radius: 12px; }
+    .case-mild { background: #d1e7dd; color: #0f5132; }
+    .case-mod { background: #ffe5d0; color: #8a3f04; }
+    .case-sev { background: #f8d7da; color: #842029; }
+    .case-crit { background: #dc3545; color: #fff; }
+
+    /* 考題 */
+    .quiz-section { color: #146c43; font-weight: 700; margin: 20px 0 12px; }
+    .quiz-card { margin-bottom: 12px; }
+    .quiz-opt { text-align: left; background: #fff; border: 1px solid #ced4da; border-radius: 8px; padding: 8px 12px; color: #212529; }
+    .quiz-opt:hover:not(:disabled) { background: #f0f8f4; border-color: #198754; }
+    .quiz-opt:disabled { color: #495057; }
+    .quiz-opt.is-right { background: #d1e7dd; border-color: #198754; color: #0f5132; font-weight: 600; }
+    .quiz-opt.is-wrong { background: #f8d7da; border-color: #dc3545; color: #842029; }
+    .quiz-expl { background: #f8f9fa; border-radius: 6px; padding: 10px 12px; font-size: 0.92rem; }
+    .quiz-bar { position: sticky; top: 0; z-index: 5; background: #f8f9fa; padding: 8px 0; }
+
+    /* 心智圖 */
+    .mm { display: flex; align-items: center; }
+    .mm-root { flex: 0 0 120px; background: #146c43; color: #fff; font-weight: 700; text-align: center; padding: 16px 8px; border-radius: 12px; }
+    .mm-root small { display: block; font-weight: 400; opacity: .9; margin-top: 2px; }
+    .mm ul { list-style: none; margin: 0; padding: 0; }
+    .mm-branches { flex: 1; min-width: 0; padding-left: 24px !important; position: relative; }
+    .mm-branches::before { content: ''; position: absolute; left: 0; top: 50%; width: 24px; border-top: 2px solid #adb5bd; }
+    .mm-branch { display: flex; align-items: center; position: relative; padding: 8px 0 8px 20px; --c: #198754; --bg: #e8f5ee; }
+    .mm-branch::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; border-left: 2px solid #adb5bd; }
+    .mm-branch:first-child::before { top: 50%; }
+    .mm-branch:last-child::before { bottom: 50%; }
+    .mm-branch::after { content: ''; position: absolute; left: 0; top: 50%; width: 20px; border-top: 2px solid #adb5bd; }
+    .mm-head { flex: 0 0 104px; background: var(--c); color: #fff; font-weight: 700; text-align: center; padding: 10px 6px; border-radius: 8px; font-size: 0.92rem; }
+    .mm-leaves { flex: 1; min-width: 0; margin-left: 18px !important; border-left: 2px solid var(--c); padding-left: 12px !important; display: grid; gap: 6px; }
+    .mm-leaf { background: var(--bg); border-radius: 6px; padding: 6px 10px; font-size: 0.85rem; line-height: 1.4; }
+    .mm-leaf b { margin-right: 6px; color: var(--c); }
+    .b1 { --c: #0b5ed7; --bg: #e7f1ff; }
+    .b2 { --c: #146c43; --bg: #e8f5ee; }
+    .b3 { --c: #b02a68; --bg: #fbeaf2; }
+    .b4 { --c: #a85400; --bg: #fff2e3; }
+    .b5 { --c: #b02a37; --bg: #fdecee; }
+    .b6 { --c: #5a4bb5; --bg: #efedfb; }
+    @media (max-width: 767.98px) {
+      .mm { display: block; }
+      .mm-root { margin-bottom: 10px; }
+      .mm-branches { padding-left: 0 !important; }
+      .mm-branches::before, .mm-branch::before, .mm-branch::after { display: none; }
+      .mm-branch { display: block; padding: 0 0 12px; }
+      .mm-head { text-align: left; padding: 6px 12px; margin-bottom: 6px; }
+      .mm-leaves { margin-left: 8px !important; }
+    }
+
     @media print {
       .d-print-none { display: none !important; }
       body { background-color: #fff; color: #000; font-size: 11pt; }
@@ -50,8 +113,18 @@
 
 <div class="container py-4 d-print-none">
   <h2 class="text-center mb-1">小兒急性氣喘發作處置計算機</h2>
-  <p class="text-center text-muted small mb-4">PRAM 評分 · 依 GINA 2026 與 TREKK 2024 · 適用 ≥ 1 歲兒童</p>
+  <p class="text-center text-muted small mb-4">PRAM 評分 · 依 GINA 2026 與 TREKK 2025 · 適用 ≥ 1 歲兒童</p>
 
+  <nav aria-label="頁面分頁">
+    <ul class="nav nav-pills main-tabs justify-content-center gap-1 mb-4">
+      <li class="nav-item"><a class="nav-link" id="tab-tool" href="#tool">計算機</a></li>
+      <li class="nav-item"><a class="nav-link" id="tab-cases" href="#cases">示範病例</a></li>
+      <li class="nav-item"><a class="nav-link" id="tab-quiz" href="#quiz">考題</a></li>
+      <li class="nav-item"><a class="nav-link" id="tab-map" href="#map">心智圖</a></li>
+    </ul>
+  </nav>
+
+  <section id="panel-tool">
   <div class="row">
     <!-- 左側輸入區 -->
     <div class="col-md-6">
@@ -196,11 +269,34 @@
             </div>
           </div>
 
-          <p class="src mt-3 mb-0">參考：GINA 2026 Summary Guide Figure 9（兒童 &lt;18 歲 PRAM 1–3 輕度、4–7 中度、8–12 重度、11–12 危及生命）；TREKK Bottom Line Recommendations: Asthma (v2.1, 2024) 與 Severe Asthma Algorithm / Order Set (v2.0, 2024)。本工具僅供臨床決策輔助，實際處置請依病人狀況與院內規範。</p>
+          <p class="src mt-3 mb-0">參考：GINA 2026 Summary Guide Figure 9（兒童 &lt;18 歲 PRAM 1–3 輕度、4–7 中度、8–12 重度、11–12 危及生命）；TREKK Bottom Line Recommendations: Asthma (v2.3, 2025) 與 Severe Asthma Algorithm / Order Set (v2.1, 2025)。本工具僅供臨床決策輔助，實際處置請依病人狀況與院內規範。</p>
         </div>
       </div>
     </div>
   </div>
+  </section>
+
+  <section id="panel-cases" hidden>
+    <p class="text-muted small">6 例涵蓋輕度到危急。劑量由計算機引擎依體重算出，「帶入計算機」會填入初始與最後一次再評估的數值。</p>
+    <div id="caseList"></div>
+    <p class="src mt-3 mb-0">來源：<a href="https://cms.trekk.ca/wp-content/uploads/2023/11/2025_03_12_Asthma-BLR-v2.3_FINAL.pdf">TREKK Bottom Line Recommendations v2.3 (2025)</a>；<a href="https://cms.trekk.ca/wp-content/uploads/2023/11/2025-03-11_Asthma-Algorithm_2.1_final.pdf">Severe Asthma Algorithm v2.1 (2025)</a>；<a href="https://cms.trekk.ca/wp-content/uploads/2023/11/2025-02-10-Asthma-Order-Set_v2.1-FINAL.pdf">Order Set v2.1 (2025)</a>；GINA 2026 Summary Guide p.19, 28, 33–37。GINA Figure 9 針對 ≥ 6 歲的基層照護。教學用途，實際處置請依病人狀況與院內規範。</p>
+  </section>
+
+  <section id="panel-quiz" hidden>
+    <div class="quiz-bar d-flex flex-wrap justify-content-between align-items-center gap-2">
+      <span class="fw-bold" id="quizScore" aria-live="polite"></span>
+      <button type="button" class="btn btn-sm btn-outline-secondary" id="quizReset">重新作答</button>
+    </div>
+    <div id="quizList"></div>
+    <p class="src mt-3 mb-0">來源：<a href="https://cms.trekk.ca/wp-content/uploads/2023/11/2025_03_12_Asthma-BLR-v2.3_FINAL.pdf">TREKK Bottom Line Recommendations v2.3 (2025)</a>；<a href="https://cms.trekk.ca/wp-content/uploads/2023/11/2025-03-11_Asthma-Algorithm_2.1_final.pdf">Severe Asthma Algorithm v2.1 (2025)</a>；<a href="https://cms.trekk.ca/wp-content/uploads/2023/11/2025-02-10-Asthma-Order-Set_v2.1-FINAL.pdf">Order Set v2.1 (2025)</a>；GINA 2026 Summary Guide p.19, 28, 33–37。GINA Figure 9 針對 ≥ 6 歲的基層照護。教學用途，實際處置請依病人狀況與院內規範。</p>
+  </section>
+
+  <section id="panel-map" hidden>
+    <div class="card"><div class="card-body">
+      <div class="mm" id="mindMap"></div>
+    </div></div>
+    <p class="src mt-3 mb-0">來源：<a href="https://cms.trekk.ca/wp-content/uploads/2023/11/2025_03_12_Asthma-BLR-v2.3_FINAL.pdf">TREKK Bottom Line Recommendations v2.3 (2025)</a>；<a href="https://cms.trekk.ca/wp-content/uploads/2023/11/2025-03-11_Asthma-Algorithm_2.1_final.pdf">Severe Asthma Algorithm v2.1 (2025)</a>；<a href="https://cms.trekk.ca/wp-content/uploads/2023/11/2025-02-10-Asthma-Order-Set_v2.1-FINAL.pdf">Order Set v2.1 (2025)</a>；GINA 2026 Summary Guide p.19, 28, 33–37。GINA Figure 9 針對 ≥ 6 歲的基層照護。教學用途，實際處置請依病人狀況與院內規範。</p>
+  </section>
 </div>
 
 <!-- 列印專屬區塊 -->
@@ -361,6 +457,208 @@ const PRAM = (() => {
 if (typeof module !== 'undefined') module.exports = PRAM;
 /*ENGINE-END*/
 
+/*CASES-START*/
+// 每例的劑量以 {變數} 寫在文字中，顯示時由引擎 PRAM.doses() 代入；expect 由 tests.cjs 對引擎驗證
+const CASES = [
+  {
+    id: 'c1', title: '夜咳的 7 歲學童', tag: '輕度', tagCls: 'mild', age: 7, wt: 24,
+    story: '感冒 2 天後喘鳴，可平躺、講整句話。平常沒有控制藥，近 1 個月夜咳每週 2–3 晚、每週用 salbutamol 3–4 次。',
+    items: { O2: 0, Supra: 0, Scalene: 0, Air: 1, Wheeze: 1 }, impending: false, anaphylaxis: false,
+    expect: { score: 2, sev: 'mild', re: ['good'] },
+    drugs: ['saba'],
+    reassess: [{ time: '2-4h', items: { O2: 0, Supra: 0, Scalene: 0, Air: 0, Wheeze: 1 }, note: '最後一劑後 2 小時' }],
+    steps: [
+      ['處置', 'Salbutamol MDI + spacer {salbMdi} 1 劑，之後 PRN。口服類固醇非常規（TREKK：證據不足，僅慢性症狀、頻繁發作或近期住院時有時使用）。'],
+      ['容易漏掉', '分數低不等於不需控制藥。這位病童有夜間症狀、常用緩解藥，屬「控制不佳」。TREKK：PRAM ≤ 3 的高風險兒童可考慮低劑量 ICS；7 歲可用 fluticasone 100 mcg BID。GINA：6–11 歲不應只用 SABA。'],
+    ],
+    teach: 'PRAM 看的是這一次發作，不是平常控制。計算機在初始 PRAM < 4 時不會提示 ICS，這一步要靠問診。',
+    src: 'TREKK BLR v2.3 p.1, p.3；GINA 2026 Summary Guide p.28',
+  },
+  {
+    id: 'c2', title: '第一次急診的 3 歲幼兒', tag: '中度', tagCls: 'mod', age: 3, wt: 14,
+    story: '流鼻水 3 天，今晚喘鳴加重，說話變短句，喜歡坐著。室內空氣 SpO₂ 93%，可見胸骨上凹陷。',
+    items: { O2: 1, Supra: 2, Scalene: 0, Air: 1, Wheeze: 2 }, impending: false, anaphylaxis: false,
+    expect: { score: 6, sev: 'mod', re: ['good', 'good'] },
+    drugs: ['saba', 'sama', 'dex'],
+    reassess: [
+      { time: '1h', items: { O2: 0, Supra: 0, Scalene: 0, Air: 1, Wheeze: 1 }, note: '完成 3 劑後' },
+      { time: '2-4h', items: { O2: 0, Supra: 0, Scalene: 0, Air: 0, Wheeze: 1 }, note: '最後一劑後 2 小時' },
+    ],
+    steps: [
+      ['第 1 小時', 'Salbutamol {salbMdi} q20min × 3，可與 ipratropium {ipraMdi} 交替 2–3 劑。口服 dexamethasone {dex} 與第一劑支氣管擴張劑同時給。'],
+      ['出院用藥', 'Salbutamol MDI 2–4 puffs q4h × 24 小時，之後 2 puffs q4h PRN，並開 spacer。初始 PRAM ≥ 4，帶每日 ICS 至回診：1–5 歲 fluticasone 50 mcg BID，至少 3 個月。Dexamethasone 第 2 天可再給 1 劑（選擇性）。'],
+    ],
+    teach: '決定出院帶 ICS 的是「初始」PRAM，不是治療後的分數。治療後只剩 1 分，仍要帶 ICS。',
+    src: 'TREKK BLR v2.3 p.1–3',
+  },
+  {
+    id: 'c3', title: '第 1 小時後仍窘迫的 9 歲兒童', tag: '中度 → 住院', tagCls: 'mod', age: 9, wt: 30,
+    story: '過去一年 2 次因氣喘使用口服類固醇，控制藥常忘記吸。喘 1 天後來診，講短句。',
+    items: { O2: 1, Supra: 2, Scalene: 0, Air: 2, Wheeze: 2 }, impending: false, anaphylaxis: false,
+    expect: { score: 7, sev: 'mod', re: ['partial', 'partial'] },
+    drugs: ['saba', 'sama', 'dex', 'mg'],
+    reassess: [
+      { time: '1h', items: { O2: 1, Supra: 2, Scalene: 0, Air: 1, Wheeze: 2 }, note: '完成 3 劑後' },
+      { time: '4-6h', items: { O2: 1, Supra: 2, Scalene: 0, Air: 1, Wheeze: 1 }, note: '類固醇後 5 小時' },
+    ],
+    steps: [
+      ['第 1 小時', 'Salbutamol {salbMdi} q20min × 3 + ipratropium {ipraMdi}。Dexamethasone 0.6 mg/kg 算出 18 mg，超過上限，只給 {dex}。'],
+      ['第 1 小時後', '仍中度窘迫（PRAM 6），加 IV MgSO₄ {mg}，至少 20 分鐘；輸注中 q5min 量血壓，之後 q30min × 2。持續 salbutamol；ipratropium 不再給。'],
+      ['第 5 小時', 'PRAM 仍 ≥ 4：考慮住院。TREKK order set 也列：PRAM 4–7 且類固醇後 ≥ 4 小時無改善，聯絡兒科轉診中心或考慮轉院。'],
+    ],
+    teach: '住院的門檻看「類固醇給了多久」，不是到院多久。先記下類固醇的給藥時間。',
+    src: 'TREKK BLR v2.3 p.2；TREKK Order Set v2.1 p.3；TREKK Algorithm v2.1 p.1',
+  },
+  {
+    id: 'c4', title: '連續霧化仍無改善的 5 歲兒童', tag: '重度', tagCls: 'sev', age: 5, wt: 18,
+    story: '喘 2 天，無法躺平、不願喝水。室內空氣 SpO₂ 90%，胸骨上凹陷與斜角肌收縮都有，意識清楚。',
+    items: { O2: 2, Supra: 2, Scalene: 2, Air: 2, Wheeze: 2 }, impending: false, anaphylaxis: false,
+    expect: { score: 10, sev: 'sev', re: ['poor', 'poor'] },
+    drugs: ['saba', 'sama', 'dex', 'mg'],
+    reassess: [
+      { time: '1h', items: { O2: 2, Supra: 2, Scalene: 2, Air: 2, Wheeze: 1 }, note: '連續霧化後' },
+      { time: '2-4h', items: { O2: 2, Supra: 2, Scalene: 0, Air: 2, Wheeze: 2 }, note: '持續霧化與 MgSO₄ 後' },
+    ],
+    steps: [
+      ['第 1 小時', '連續心肺監測，給氧維持 SpO₂ > 92%。Salbutamol {salbCont}/hr + ipratropium {ipraCont}（1 小時）連續霧化。意識清楚時類固醇仍以口服為先：dexamethasone {dex}。'],
+      ['第 1 小時後 PRAM ≥ 8', '持續霧化 salbutamol；IV MgSO₄ {mg}，至少 20 分鐘，注意低血壓並維持等容。安排 CXR 或 POCUS 找氣胸、縱膈氣腫，並考慮血氣與電解質。'],
+      ['聯絡', 'TREKK：治療 1–2 小時後 PRAM 仍 ≥ 8，聯絡兒科轉診中心或轉運團隊。'],
+    ],
+    teach: 'PRAM 8–10 的類固醇仍是口服優先；IV 留給瀕臨衰竭或無法口服。治療中惡化或沒有進步，要想到氣胸。',
+    src: 'TREKK Algorithm v2.1 p.1；TREKK Order Set v2.1 p.1–3；TREKK BLR v2.3 p.1–2',
+  },
+  {
+    id: 'c5', title: '「安靜下來」的 2 歲幼兒', tag: '瀕臨呼吸衰竭', tagCls: 'crit', age: 2, wt: 12,
+    story: '喘了 1 天。家長說孩子「比較不喘、睡著了」。到院叫不太醒、嘴唇發紺，胸壁幾乎不動，聽不到喘鳴與呼吸音。已知牛奶蛋白過敏。',
+    items: { O2: 2, Supra: 0, Scalene: 0, Air: 3, Wheeze: 3 }, impending: true, anaphylaxis: false,
+    expect: { score: 8, sev: 'crit', re: [] },
+    drugs: ['saba', 'sama', 'iv', 'mg', 'bolus'],
+    reassess: [],
+    steps: [
+      ['立即', '移到急救區，連續監測、給氧、請求支援，聯絡兒科轉診中心。意識下降要測 POCT 血糖。'],
+      ['藥物', 'Salbutamol {salbCont}/hr + ipratropium {ipraCont}（1 小時）連續霧化。IV 類固醇選 hydrocortisone {hydrocort}：牛奶蛋白過敏禁用 methylprednisolone 40 mg 小瓶。MgSO₄ {mg} 列為初始處置。'],
+      ['灌流', '灌流不足時 NS 或 RL {bolus}，可重複。輸液後反而惡化要想到心因性休克。'],
+      ['呼吸支持', '高流量氧 → CPAP（5–10 cmH₂O）→ BiPAP（PEEP 至少 5、ΔP 至少 5）。插管風險高，是其他治療失敗後的最後手段，宜與 PICU 或轉運團隊討論。'],
+    ],
+    teach: '凹陷消失加上嗜睡不是好轉，是快撐不住了。嗜睡、發紺、呼吸費力減弱或 pCO₂ 上升，不論 PRAM 幾分都算瀕臨衰竭。',
+    src: 'TREKK Algorithm v2.1 p.1；TREKK BLR v2.3 p.1',
+  },
+  {
+    id: 'c6', title: '吃花生後喘鳴的 11 歲兒童', tag: '過敏性休克合併喘', tagCls: 'mod', age: 11, wt: 40,
+    story: '有氣喘與花生過敏。午餐後 15 分鐘全身蕁麻疹、嘔吐、喘鳴。室內空氣 SpO₂ 93%。',
+    items: { O2: 1, Supra: 2, Scalene: 0, Air: 1, Wheeze: 2 }, impending: false, anaphylaxis: true,
+    expect: { score: 6, sev: 'mod', re: ['good', 'good'] },
+    drugs: ['epi', 'saba', 'sama', 'dex'],
+    reassess: [
+      { time: '1h', items: { O2: 0, Supra: 0, Scalene: 0, Air: 1, Wheeze: 1 }, note: '腎上腺素與支氣管擴張劑後' },
+      { time: '2-4h', items: { O2: 0, Supra: 0, Scalene: 0, Air: 0, Wheeze: 1 }, note: '最後一劑後 2 小時' },
+    ],
+    steps: [
+      ['第一步', '先給 epinephrine（1 mg/mL）{epi} IM，大腿前外側；必要時 q5min 重複。不要等霧化的效果。'],
+      ['接著', '依 PRAM 6 治療氣喘：salbutamol {salbMdi} q20min × 3 + ipratropium {ipraMdi}；dexamethasone 算出 24 mg，超過上限，只給 {dex}。'],
+      ['離院前', '除氣喘出院用藥外，GINA 提醒：確定食物過敏者要備注射或鼻噴腎上腺素，並教導避開。過敏性休克的觀察時間依 TREKK Anaphylaxis 資源或院內規範，本頁未涵蓋。'],
+    ],
+    teach: '工具的出院判斷只看 PRAM，不會計入過敏性休克需要的觀察時間，這部分要另外判斷。',
+    src: 'TREKK Algorithm v2.1 p.1；TREKK Order Set v2.1 p.2；GINA 2026 Summary Guide p.19, p.35',
+  },
+];
+/*CASES-END*/
+
+/*QUIZ-START*/
+// lv: basic / adv；ans 為 options 索引，A–D 各 5 題，選項順序固定
+const QUIZ = [
+  { lv: 'basic', q: '下列何者不是 PRAM 的評分項目？', options: ['呼吸速率', '斜角肌收縮', '胸骨上凹陷', '室內空氣 SpO₂'], ans: 0,
+    expl: 'PRAM 五項：SpO₂、胸骨上凹陷、斜角肌收縮、呼吸音進入量、喘鳴音，總分 0–12，不含呼吸速率。', src: 'TREKK Algorithm v2.1' },
+  { lv: 'basic', q: '室內空氣 SpO₂ 93%、胸骨上凹陷有、斜角肌收縮無、底部呼吸音減少、僅呼氣期喘鳴，PRAM 幾分？', options: ['3', '4', '5', '6'], ans: 2,
+    expl: '1 + 2 + 0 + 1 + 1 = 5，屬中度。', src: 'TREKK Algorithm v2.1' },
+  { lv: 'basic', q: 'PRAM 8 分，意識清楚、無發紺，嚴重度為何？', options: ['輕度', '重度', '中度', '瀕臨呼吸衰竭'], ans: 1,
+    expl: '1–3 輕度、4–7 中度、8–12 重度。瀕臨衰竭看臨床徵象，這位病童沒有。', src: 'TREKK BLR v2.3 p.1；GINA Fig 9' },
+  { lv: 'basic', q: '體重 20 kg 的兒童，salbutamol MDI（100 mcg/puff）每次幾下？', options: ['5 puffs', '6 puffs', '8 puffs', '10 puffs'], ans: 3,
+    expl: '< 20 kg 5 puffs；≥ 20 kg 10 puffs。剛好 20 kg 算高劑量。', src: 'TREKK BLR v2.3 p.1' },
+  { lv: 'basic', q: '關於 ipratropium，何者正確？', options: ['< 20 kg 減半為 2 puffs', '不分體重每次 4 puffs，僅用於第 1 小時', '住院期間持續每 4 小時使用', '輕度發作也應常規使用'], ans: 1,
+    expl: '所有體重 4 puffs（或霧化 250 mcg）q20min × 3；第 1 小時後只續用 salbutamol。', src: 'TREKK Algorithm v2.1' },
+  { lv: 'basic', q: '15 kg 兒童口服 dexamethasone 的劑量？', options: ['9 mg', '6 mg', '12 mg', '15 mg'], ans: 0,
+    expl: '0.6 mg/kg × 15 = 9 mg；上限 12 mg。', src: 'TREKK BLR v2.3 p.1' },
+  { lv: 'basic', q: '中度發作（PRAM 4–7），全身性類固醇何時給？', options: ['第 1 小時無改善才給', '等血氣結果決定', '一律靜脈注射', '與第一劑支氣管擴張劑同時口服'], ans: 3,
+    expl: '越早給越能縮短窘迫、減少住院。TREKK 建議與第一劑支氣管擴張劑一起口服。', src: 'TREKK BLR v2.3 p.1–2' },
+  { lv: 'basic', q: 'GINA 建議給氧時的目標 SpO₂？', options: ['88–92%', '90–92%', '92–95%', '96–100%'], ans: 2,
+    expl: 'GINA 目標 92–95%；TREKK order set 寫維持 > 92%（高海拔 > 90%）。', src: 'GINA 2026 Summary Guide p.35' },
+  { lv: 'basic', q: '何者符合安全出院條件？', options: ['最後一劑支氣管擴張劑後至少 1–2 小時 PRAM ≤ 3，室內空氣 SpO₂ ≥ 92%', '治療後 PRAM ≤ 7，家長同意回家', '最後一劑後 15 分鐘 PRAM ≤ 3', '使用氧氣下 SpO₂ ≥ 92%'], ans: 0,
+    expl: '要等藥效過後仍穩定，且是室內空氣。另需無明顯凹陷、進氣良好、至多輕微呼氣喘鳴。', src: 'TREKK BLR v2.3 p.2' },
+  { lv: 'basic', q: '下列哪一項是 GINA 明確表示不應例行使用的？', options: ['MDI + spacer', '重複評估 PRAM', '胸部 X 光與抗生素', '脈搏血氧監測'], ans: 2,
+    expl: 'GINA：不要例行做胸部 X 光或血氣、不要例行開抗生素，也不要用鎮靜藥。', src: 'GINA 2026 Summary Guide p.35' },
+
+  { lv: 'adv', q: '2 歲幼兒 PRAM 6，但嗜睡、呼吸費力變弱。下一步？', options: ['依中度處置，1 小時後再評估', '視為瀕臨呼吸衰竭：連續霧化、IV 類固醇、IV MgSO₄、聯絡轉診中心', '凹陷減少代表改善，繼續觀察', '先抽血氣，確認 pCO₂ 上升才升級'], ans: 1,
+    expl: '嗜睡、發紺、呼吸費力減弱或 pCO₂ 上升，不論 PRAM 幾分都視為瀕臨衰竭；pCO₂ 只是其中一項，不必等。', src: 'TREKK BLR v2.3 p.1' },
+  { lv: 'adv', q: '28 kg 兒童第 1 小時後仍中重度窘迫。MgSO₄ 的正確給法？', options: ['1400 mg IV push，5 分鐘內', '2000 mg，不分體重', '700 mg，至少 20 分鐘', '1400 mg，至少 20 分鐘；輸注中 q5min 量血壓，之後 q30min × 2'], ans: 3,
+    expl: '50 mg/kg（max 2 g）= 1400 mg。可能低血壓，罕見呼吸暫停、肌張力低下、麻痺；需維持等容。', src: 'TREKK Algorithm v2.1' },
+  { lv: 'adv', q: '6 歲、20 kg，瀕臨呼吸衰竭，已知牛奶蛋白過敏，IV 類固醇怎麼選？', options: ['Hydrocortisone 160 mg IV', 'Methylprednisolone 40 mg IV', '不給類固醇，避免過敏', '只給吸入型類固醇'], ans: 0,
+    expl: 'Hydrocortisone 8 mg/kg = 160 mg。Methylprednisolone 40 mg 小瓶禁用於牛奶蛋白過敏，且 hydrocortisone 過敏反應較少。', src: 'TREKK Algorithm v2.1' },
+  { lv: 'adv', q: '連續霧化中突然惡化，一側呼吸音變弱。最該先確認什麼？', options: ['ipratropium 劑量是否不足', '是否該改口服類固醇', '用 CXR 或 POCUS 檢查氣胸等氣壓傷', '是否需加抗生素'], ans: 2,
+    expl: 'TREKK 演算法提醒：惡化或未改善要想到氣胸；持續重度時安排 CXR/POCUS。', src: 'TREKK Algorithm v2.1' },
+  { lv: 'adv', q: '持續意識下降、發紺、呼吸努力減弱。TREKK 的呼吸支持順序？', options: ['立即插管', '先鎮靜讓孩子配合面罩', '直接 BiPAP，PEEP 15 cmH₂O', '高流量氧 → CPAP 5–10 cmH₂O → 必要時 BiPAP；插管為最後手段'], ans: 3,
+    expl: '逐步升級；插管風險高且很少需要。GINA 也明列不要使用鎮靜藥。', src: 'TREKK Algorithm v2.1；GINA p.35' },
+  { lv: 'adv', q: '35 kg 兒童吃堅果後蕁麻疹、低血壓、喘鳴。第一個藥？', options: ['Salbutamol 10 puffs', 'Epinephrine 0.35 mg IM 大腿前外側，必要時 q5min 重複', 'Epinephrine 0.35 mg IV push', 'Methylprednisolone 70 mg IV'], ans: 1,
+    expl: '0.01 mg/kg（min 0.1、max 0.5 mg），濃度 1 mg/mL。GINA：過敏性休克合併氣喘，先給腎上腺素。', src: 'TREKK Algorithm v2.1；GINA p.35' },
+  { lv: 'adv', q: '類固醇給完 5 小時，PRAM 仍 5 分。處置？', options: ['考慮住院，並與轉診中心討論', '再加 1 劑 dexamethasone 後回家', '立即插管', 'PRAM < 8，可以回家'], ans: 0,
+    expl: 'PRAM ≥ 4 持續超過類固醇後 4–6 小時，考慮住院；order set 列 PRAM 4–7 且 ≥ 4 小時無改善時聯絡轉診中心。', src: 'TREKK BLR v2.3 p.2；Order Set v2.1 p.3' },
+  { lv: 'adv', q: '8 歲中度發作後出院。TREKK 與 GINA 的控制藥建議，何者描述正確？', options: ['兩者都建議高劑量 ICS', 'GINA 建議只用 SABA PRN', 'TREKK：低／起始劑量 ICS 至回診；GINA：6–11 歲可用中劑量 ICS-LABA 或 ICS-formoterol MART', 'TREKK 僅限 PRAM ≥ 8 才給 ICS'], ans: 2,
+    expl: '兩份文件起點不同。GINA 的建議面向 6–11 歲，TREKK 涵蓋 ≥ 12 個月。院內應先確定採用哪一份，並確認健保與藥品可及性。', src: 'TREKK BLR v2.3 p.3；GINA p.28, p.35' },
+  { lv: 'adv', q: '關於口服 prednisolone 的來源差異，何者正確？', options: ['兩份文件上限相同', 'GINA 療程固定 10 天', 'TREKK 沒有上限', 'TREKK 上限 60 mg（共 5 天）；GINA 為 1–2 mg/kg/day、上限 40 mg（3–5 天）'], ans: 3,
+    expl: '體重大的兒童差異才明顯。本工具依 TREKK 計算；療程少於 2 週不需減量（GINA）。', src: 'TREKK Order Set v2.1；GINA p.34' },
+  { lv: 'adv', q: '8 個月大，第一次喘鳴，RSV 陽性。PRAM 分級與本工具的流程？', options: ['直接適用，依分數給藥', '不適用：TREKK 對象為 ≥ 12 個月，先評估細支氣管炎', '只要減半劑量即可適用', '一律給 dexamethasone'], ans: 1,
+    expl: 'TREKK 建議對象為 ≥ 12 個月。工具輸入未滿 1 歲時也會警示。', src: 'TREKK BLR v2.3' },
+];
+/*QUIZ-END*/
+
+/*MAP-START*/
+const MIND_MAP = {
+  root: '小兒急性氣喘',
+  sub: '≥ 12 個月',
+  branches: [
+    { t: '評估', c: 'b1', leaves: [
+      ['PRAM 0–12', 'SpO₂ 0–2 · 胸骨上凹陷 0/2 · 斜角肌 0/2 · 進氣 0–3 · 喘鳴 0–3'],
+      ['分級', '1–3 輕度 · 4–7 中度 · 8–12 重度 · GINA：11–12 危及生命'],
+      ['瀕臨衰竭', '嗜睡、發紺、呼吸費力減弱、pCO₂ 上升，不論分數'],
+      ['鑑別', '過敏性休克 · 氣胸 · 異物 · 肺炎 · 誘發性喉阻塞 · 心衰竭'],
+    ] },
+    { t: '依分級處置', c: 'b2', leaves: [
+      ['輕度', 'Salbutamol 1 劑後 PRN；口服類固醇非常規'],
+      ['中度', 'Salbutamol q20min × 3 + ipratropium；口服 dexamethasone 同時給'],
+      ['重度', '連續霧化 salbutamol + ipratropium；口服類固醇；給氧與監測'],
+      ['瀕臨衰竭', '連續霧化；IV 類固醇；IV MgSO₄；需要時輸液與呼吸支持'],
+    ] },
+    { t: '藥物劑量', c: 'b3', leaves: [
+      ['Salbutamol', '< 20 kg：5 puffs／2.5 mg／7.5 mg/hr · ≥ 20 kg：10 puffs／5 mg／15 mg/hr'],
+      ['Ipratropium', '4 puffs／250 mcg q20min × 3，或 750 mcg／1 hr；僅第 1 小時'],
+      ['類固醇', 'Dexamethasone 0.6 mg/kg（max 12 mg）· Prednisolone 2 mg/kg 首劑（max 60 mg）'],
+      ['IV 類固醇', 'Hydrocortisone 8 mg/kg（max 400 mg）· Methylprednisolone 2 mg/kg（max 80 mg）'],
+      ['MgSO₄', '50 mg/kg（max 2 g），至少 20 分鐘；BP q5min，之後 q30min × 2'],
+      ['Epinephrine IM', '0.01 mg/kg（min 0.1、max 0.5 mg），必要時 q5min 重複'],
+      ['輸液', 'NS 或 RL 20 mL/kg（max 1000 mL），灌流不足時'],
+    ] },
+    { t: '再評估', c: 'b4', leaves: [
+      ['時機', '1 小時內或更早；重度在第 1 小時後評估生命徵象、SpO₂、呼吸功、灌流、意識、PRAM'],
+      ['PRAM ≤ 3', '最後一劑後至少 1–2 小時仍 ≤ 3，且 SpO₂ ≥ 92%：可出院'],
+      ['PRAM 4–7', '第 1 小時後仍窘迫考慮 MgSO₄；類固醇後 4–6 小時仍 ≥ 4 考慮住院'],
+      ['PRAM ≥ 8', '持續霧化、MgSO₄；1–2 小時後仍 ≥ 8 聯絡轉診中心／PICU'],
+    ] },
+    { t: '危急與陷阱', c: 'b5', leaves: [
+      ['呼吸支持', '高流量氧 → CPAP 5–10 → BiPAP；插管為最後手段'],
+      ['惡化時想到', '氣胸（CXR/POCUS）· 輸液後惡化想心因性休克 · 意識下降測血糖'],
+      ['藥物陷阱', '牛奶蛋白過敏禁用 methylprednisolone 40 mg 小瓶 · MgSO₄ 可致低血壓'],
+      ['不例行', '胸部 X 光、血氣、抗生素；不用鎮靜藥'],
+    ] },
+    { t: '出院安排', c: 'b6', leaves: [
+      ['緩解藥', 'Salbutamol 2–4 puffs q4h × 24 小時，之後 2 puffs q4h PRN；所有 MDI 配 spacer'],
+      ['ICS', '初始 PRAM ≥ 4 必帶；PRAM ≤ 3 但高風險可考慮。Fluticasone 1–5 歲 50、6–11 歲 100、≥ 12 歲 125 mcg BID'],
+      ['口服類固醇', 'Dexamethasone 1–2 天，或 prednisolone 共 5 天'],
+      ['衛教與回診', '書面行動計畫、吸藥技巧；GINA 2–5 天內，TREKK 最好 7 天內'],
+    ] },
+  ],
+};
+/*MAP-END*/
+
   const $ = id => document.getElementById(id);
   let latest = null;
   let reEval = null;
@@ -515,6 +813,135 @@ if (typeof module !== 'undefined') module.exports = PRAM;
     window.print();
   }
 
+  /* ---------- 分頁 ---------- */
+  const PANELS = ['tool', 'cases', 'quiz', 'map'];
+  function showPanel(name) {
+    const p = PANELS.includes(name) ? name : 'tool';
+    PANELS.forEach(x => {
+      $('panel-' + x).hidden = x !== p;
+      const tab = $('tab-' + x);
+      tab.classList.toggle('active', x === p);
+      if (x === p) tab.setAttribute('aria-current', 'page'); else tab.removeAttribute('aria-current');
+    });
+  }
+  window.addEventListener('hashchange', () => { showPanel(location.hash.slice(1)); window.scrollTo(0, 0); });
+
+  /* ---------- 示範病例 ---------- */
+  function caseVars(wt) {
+    const d = PRAM.doses(wt);
+    return {
+      salbMdi: d.salbutamol.mdi + ' puffs', salbNeb: d.salbutamol.neb + ' mg', salbCont: d.salbutamol.cont + ' mg',
+      ipraMdi: d.ipratropium.mdi + ' puffs', ipraCont: d.ipratropium.cont + ' mcg',
+      dex: d.dex.dose + ' mg', hydrocort: d.hydrocort.dose + ' mg', mg: d.mg.dose + ' mg',
+      bolus: d.bolus.dose + ' mL', epi: d.epi.dose + ' mg',
+    };
+  }
+  const fillVars = (t, v) => t.replace(/\{(\w+)\}/g, (m, k) => v[k] !== undefined ? v[k] : m);
+
+  function caseDrugRows(c) {
+    const d = PRAM.doses(c.wt);
+    const all = {
+      saba: ['Salbutamol', `${d.salbutamol.mdi} puffs 或霧化 ${d.salbutamol.neb} mg；連續霧化 ${d.salbutamol.cont} mg/hr`],
+      sama: ['Ipratropium', `${d.ipratropium.mdi} puffs 或霧化 ${d.ipratropium.neb} mcg；連續霧化 ${d.ipratropium.cont} mcg/1 hr`],
+      dex: ['Dexamethasone PO', fmt(d.dex, 'mg')],
+      iv: ['IV 類固醇', `Hydrocortisone ${fmt(d.hydrocort, 'mg')} 或 methylprednisolone ${fmt(d.methylpred, 'mg')}`],
+      mg: ['MgSO₄ IV', fmt(d.mg, 'mg')],
+      bolus: ['NS/RL bolus', fmt(d.bolus, 'mL')],
+      epi: ['Epinephrine IM', `${d.epi.dose} mg`],
+    };
+    return c.drugs.map(k => `<tr><th scope="row">${all[k][0]}</th><td>${all[k][1]}</td></tr>`).join('');
+  }
+
+  function renderCases() {
+    const timeLabel = { '1h': '第 1 小時', '2-4h': '2–4 小時', '4-6h': '類固醇後 > 4–6 小時' };
+    $('caseList').innerHTML = CASES.map((c, i) => {
+      const s = PRAM.score(c.items), sev = PRAM.severity(s, c.impending), v = caseVars(c.wt);
+      const pramRows = PRAM.ITEMS.map(it => `<li>${it.label}：${it.opts.find(o => o[1] === c.items[it.id])[0]} <b>(${c.items[it.id]})</b></li>`).join('');
+      const re = c.reassess.map(r => {
+        const rs = PRAM.score(r.items), out = PRAM.reassess(rs, r.time, s, r.items.O2);
+        return `<li><b>${timeLabel[r.time]}（${r.note}）：PRAM ${rs}</b> → ${out.head.replace(/^動向：/, '')}</li>`;
+      }).join('');
+      return `<article class="card case-card" id="${c.id}">
+        <div class="card-header d-flex flex-wrap justify-content-between align-items-center gap-2">
+          <span>病例 ${i + 1}：${c.title}</span><span class="case-tag case-${c.tagCls}">${c.tag}</span>
+        </div>
+        <div class="card-body">
+          <p class="mb-2"><b>${c.age} 歲、${c.wt} kg。</b>${c.story}</p>
+          <div class="row g-3">
+            <div class="col-md-6">
+              <h6 class="case-h">PRAM ${s} 分 · ${sev.label}${c.impending ? '（臨床徵象優先於分數）' : ''}</h6>
+              <ul class="case-list">${pramRows}</ul>
+            </div>
+            <div class="col-md-6">
+              <h6 class="case-h">依體重的劑量</h6>
+              <div class="table-responsive"><table class="table table-sm case-table mb-0"><tbody>${caseDrugRows(c)}</tbody></table></div>
+            </div>
+          </div>
+          <h6 class="case-h mt-3">處置思路</h6>
+          <dl class="case-steps mb-0">${c.steps.map(st => `<dt>${st[0]}</dt><dd>${fillVars(st[1], v)}</dd>`).join('')}</dl>
+          ${re ? `<h6 class="case-h mt-3">再評估</h6><ul class="case-list">${re}</ul>` : ''}
+          <div class="case-teach mt-3"><b>教學重點：</b>${c.teach}</div>
+          <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mt-3">
+            <span class="src">${c.src}</span>
+            <button type="button" class="btn btn-sm btn-success" data-load-case="${c.id}">帶入計算機</button>
+          </div>
+        </div>
+      </article>`;
+    }).join('');
+    $('caseList').addEventListener('click', e => {
+      const b = e.target.closest('[data-load-case]');
+      if (b) loadCase(b.dataset.loadCase);
+    });
+  }
+
+  function loadCase(id) {
+    const c = CASES.find(x => x.id === id);
+    $('weight').value = c.wt;
+    $('age').value = c.age;
+    PRAM.ITEMS.forEach(it => { $('pram' + it.id).value = String(c.items[it.id]); });
+    $('impending').checked = c.impending;
+    $('anaphylaxis').checked = c.anaphylaxis;
+    const r = c.reassess[c.reassess.length - 1];
+    PRAM.ITEMS.forEach(it => { $('re' + it.id).value = r ? String(r.items[it.id]) : ''; });
+    $('reTime').value = r ? r.time : '1h';
+    calculateAsthma();
+    location.hash = '#tool';
+  }
+
+  /* ---------- 考題：選項順序固定，不儲存作答 ---------- */
+  const quizPicked = {};
+  const LETTERS = ['A', 'B', 'C', 'D'];
+  function renderQuiz() {
+    const block = (lv, title, offset) => {
+      const list = QUIZ.map((q, i) => ({ q, i })).filter(x => x.q.lv === lv);
+      return `<h5 class="quiz-section">${title}</h5>` + list.map((x, n) => {
+        const picked = quizPicked[x.i], done = picked !== undefined;
+        return `<div class="card quiz-card"><div class="card-body">
+          <p class="fw-bold mb-2">${offset + n + 1}. ${x.q.q}</p>
+          <div class="d-grid gap-2">${x.q.options.map((o, oi) => {
+            const cls = !done ? '' : oi === x.q.ans ? ' is-right' : oi === picked ? ' is-wrong' : '';
+            return `<button type="button" class="quiz-opt${cls}" data-q="${x.i}" data-o="${oi}"${done ? ' disabled' : ''}><b>${LETTERS[oi]}.</b> ${o}</button>`;
+          }).join('')}</div>
+          ${done ? `<div class="quiz-expl mt-2" role="status"><b>${picked === x.q.ans ? '答對了。' : `答案是 ${LETTERS[x.q.ans]}。`}</b>${x.q.expl}<div class="src mt-1">${x.q.src}</div></div>` : ''}
+        </div></div>`;
+      }).join('');
+    };
+    const answered = Object.keys(quizPicked).length;
+    const right = Object.keys(quizPicked).filter(i => quizPicked[i] === QUIZ[i].ans).length;
+    $('quizScore').textContent = `已答 ${answered} / ${QUIZ.length} · 答對 ${right}`;
+    $('quizList').innerHTML = block('basic', '基礎題（1–10）', 0) + block('adv', '高階題（11–20）', 10);
+  }
+
+  /* ---------- 心智圖 ---------- */
+  function renderMap() {
+    const m = MIND_MAP;
+    $('mindMap').innerHTML = `<div class="mm-root">${m.root}<small>${m.sub}</small></div>
+      <ul class="mm-branches">${m.branches.map(b => `<li class="mm-branch ${b.c}">
+        <div class="mm-head">${b.t}</div>
+        <ul class="mm-leaves">${b.leaves.map(l => `<li class="mm-leaf"><b>${l[0]}</b><span>${l[1]}</span></li>`).join('')}</ul>
+      </li>`).join('')}</ul>`;
+  }
+
   buildReItems();
   document.querySelectorAll('#asthmaForm input, #asthmaForm select').forEach(el => {
     el.addEventListener('input', calculateAsthma);
@@ -524,6 +951,24 @@ if (typeof module !== 'undefined') module.exports = PRAM;
   document.querySelectorAll('.re-item').forEach(el => el.addEventListener('change', updateReeval));
   calculateAsthma();
   $('inputWarn').style.display = 'none';
+
+  renderCases();
+  renderQuiz();
+  renderMap();
+  $('quizList').addEventListener('click', e => {
+    const b = e.target.closest('.quiz-opt');
+    if (!b || b.disabled) return;
+    quizPicked[b.dataset.q] = Number(b.dataset.o);
+    const y = window.scrollY;
+    renderQuiz();
+    window.scrollTo(0, y);
+  });
+  $('quizReset').addEventListener('click', () => {
+    Object.keys(quizPicked).forEach(k => delete quizPicked[k]);
+    renderQuiz();
+    window.scrollTo(0, 0);
+  });
+  showPanel(location.hash.slice(1));
 
   if ('serviceWorker' in navigator && location.protocol !== 'file:') {
     navigator.serviceWorker.register('sw.js').catch(() => {});

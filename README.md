@@ -12,13 +12,14 @@
     *   重度急救藥物：IV Magnesium Sulfate 50 mg/kg (max 2 g)、等張輸液 bolus、過敏性休克時 IM epinephrine
 *   **治療後再評估：** 以同樣 5 項重新評分，配合時間點（1 小時 / 2–4 小時 / 類固醇後 > 4–6 小時）給出出院、住院或 PICU 建議（TREKK 標準）。
 *   **醫囑單列印匯出 (PDF Export)：** 內建隱藏式 A4 醫囑單排版，一鍵點擊即可將病患資料、PRAM 評分與精算後的藥物劑量轉存為 PDF 檔。
+*   **教學分頁：** 示範病例 6 例（`#cases`，可帶入計算機）、考題 20 題（`#quiz`，基礎 10 + 高階 10，附解析）、心智圖（`#map`）。
 *   **離線支援 (PWA)：** 支援無網際網路的環境（如急診室地下室），可透過手機瀏覽器直接安裝至主畫面作為本機 APP 使用。
 
 ## 📚 參考臨床指引 (Clinical Guidelines)
 
 *   **評估工具：** PRAM (Pediatric Respiratory Assessment Measure)，GINA 2026 建議 < 18 歲兒童使用。
 *   **嚴重度分級：** GINA 2026 Summary Guide Figure 9。
-*   **劑量與處置：** TREKK Bottom Line Recommendations: Asthma Exacerbations (v2.1, 2024)、TREKK Severe Asthma Algorithm 與 Order Set (v2.0, 2024)；適用 ≥ 12 個月兒童。
+*   **劑量與處置：** TREKK Bottom Line Recommendations: Asthma Exacerbations (v2.3, 2025)、TREKK Severe Asthma Algorithm 與 Order Set (v2.1, 2025)；適用 ≥ 12 個月兒童。
 
 ## 🚀 部署與安裝 (Deployment)
 
@@ -40,4 +41,4 @@
 
 ## 🧪 測試
 
-計算邏輯集中在 `index.html` 的 `/*ENGINE-START*/ … /*ENGINE-END*/` 區塊，執行 `node tests.cjs` 驗證評分、分級、劑量上限與再評估邏輯。更新內容時請一併遞增 `sw.js` 的 `CACHE` 版本號。
+計算邏輯集中在 `index.html` 的 `/*ENGINE-START*/ … /*ENGINE-END*/` 區塊，教學內容在 `/*CASES-START*/`、`/*QUIZ-START*/`、`/*MAP-START*/` 區塊。執行 `node tests.cjs` 驗證評分、分級、劑量上限、再評估邏輯與教學內容。更新內容時請一併遞增 `sw.js` 的 `CACHE` 版本號。
