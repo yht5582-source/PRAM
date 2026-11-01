@@ -52,6 +52,7 @@ eq(P.doses(3.3).dex.dose, 2, 'dex 1-decimal rounding');
 // 處置建議
 eq(P.guideline('mild', false).some(x => x.includes('非常規')), true, 'mild: OCS not routine');
 eq(P.guideline('mod', false).some(x => x.includes('q20min × 3')), true, 'moderate: q20min x3');
+eq(P.guideline('mod', false).some(x => x.includes('與第一劑支氣管擴張劑同時')), true, 'moderate: steroid with first bronchodilator dose');
 eq(P.guideline('crit', false).some(x => x.includes('IV 類固醇')), true, 'crit: IV steroid');
 eq(P.guideline('sev', false).some(x => x.includes('IV 類固醇')), false, 'severe: oral steroid, not IV');
 eq(P.guideline('mild', true)[0].includes('epinephrine'), true, 'anaphylaxis first');
