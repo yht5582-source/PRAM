@@ -1,5 +1,5 @@
 // 版本號隨每次發布遞增，舊快取會在 activate 時清除
-const CACHE = 'pram-v2.2.0';
+const CACHE = 'pram-v2.2.1';
 const ASSETS = [
   './',
   './index.html',

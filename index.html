@@ -74,7 +74,13 @@
     .mm-branch:first-child::before { top: 50%; }
     .mm-branch:last-child::before { bottom: 50%; }
     .mm-branch::after { content: ''; position: absolute; left: 0; top: 50%; width: 20px; border-top: 2px solid #adb5bd; }
-    .mm-head { flex: 0 0 104px; background: var(--c); color: #fff; font-weight: 700; text-align: center; padding: 10px 6px; border-radius: 8px; font-size: 0.92rem; }
+    .mm-head { flex: 0 0 124px; background: var(--c); color: #fff; font-weight: 700; text-align: center; padding: 10px 6px; border: 0; border-radius: 8px; font-size: 0.92rem; }
+    .mm-head:hover { filter: brightness(1.12); }
+    .mm-head:focus-visible { outline: 3px solid #212529; outline-offset: 2px; }
+    .mm-caret { display: inline-block; width: 1em; transition: transform .15s; }
+    .mm-head[aria-expanded="true"] .mm-caret { transform: rotate(90deg); }
+    .mm-count { font-weight: 400; font-size: 0.78rem; opacity: .9; margin-left: 2px; }
+    .mm-head[aria-expanded="true"] .mm-count { display: none; }
     .mm-leaves { flex: 1; min-width: 0; margin-left: 18px !important; border-left: 2px solid var(--c); padding-left: 12px !important; display: grid; gap: 6px; }
     .mm-leaf { background: var(--bg); border-radius: 6px; padding: 6px 10px; font-size: 0.85rem; line-height: 1.4; }
     .mm-leaf b { margin-right: 6px; color: var(--c); }
@@ -90,7 +96,8 @@
       .mm-branches { padding-left: 0 !important; }
       .mm-branches::before, .mm-branch::before, .mm-branch::after { display: none; }
       .mm-branch { display: block; padding: 0 0 12px; }
-      .mm-head { text-align: left; padding: 6px 12px; margin-bottom: 6px; }
+      .mm-head { display: block; width: 100%; text-align: left; padding: 8px 12px; }
+      .mm-leaves { margin-top: 6px; }
       .mm-leaves { margin-left: 8px !important; }
     }
 
@@ -298,6 +305,10 @@
 
   <section id="panel-map" hidden>
     <div class="card"><div class="card-body">
+      <div class="d-flex justify-content-end gap-2 mb-3">
+        <button type="button" class="btn btn-sm btn-outline-success" id="mmExpand">全部展開</button>
+        <button type="button" class="btn btn-sm btn-outline-secondary" id="mmCollapse">全部收合</button>
+      </div>
       <div class="mm" id="mindMap"></div>
     </div></div>
     <p class="src mt-3 mb-0">來源：<a href="https://cms.trekk.ca/wp-content/uploads/2023/11/2025_03_12_Asthma-BLR-v2.3_FINAL.pdf">TREKK Bottom Line Recommendations v2.3 (2025)</a>；<a href="https://cms.trekk.ca/wp-content/uploads/2023/11/2025-03-11_Asthma-Algorithm_2.1_final.pdf">Severe Asthma Algorithm v2.1 (2025)</a>；<a href="https://cms.trekk.ca/wp-content/uploads/2023/11/2025-02-10-Asthma-Order-Set_v2.1-FINAL.pdf">Order Set v2.1 (2025)</a>；GINA 2026 Summary Guide p.19, 28, 33–37。GINA Figure 9 針對 ≥ 6 歲的基層照護。教學用途，實際處置請依病人狀況與院內規範。</p>
@@ -956,10 +967,21 @@ const MIND_MAP = {
   function renderMap() {
     const m = MIND_MAP;
     $('mindMap').innerHTML = `<div class="mm-root">${m.root}<small>${m.sub}</small></div>
-      <ul class="mm-branches">${m.branches.map(b => `<li class="mm-branch ${b.c}">
-        <div class="mm-head">${b.t}</div>
-        <ul class="mm-leaves">${b.leaves.map(l => `<li class="mm-leaf"><b>${l[0]}</b><span>${l[1]}</span></li>`).join('')}</ul>
+      <ul class="mm-branches">${m.branches.map((b, i) => `<li class="mm-branch ${b.c}">
+        <button type="button" class="mm-head" aria-expanded="true" aria-controls="mm-leaves-${i}"><span class="mm-caret" aria-hidden="true">▸</span>${b.t}<span class="mm-count">(${b.leaves.length})</span></button>
+        <ul class="mm-leaves" id="mm-leaves-${i}">${b.leaves.map(l => `<li class="mm-leaf"><b>${l[0]}</b><span>${l[1]}</span></li>`).join('')}</ul>
       </li>`).join('')}</ul>`;
+    $('mindMap').addEventListener('click', e => {
+      const head = e.target.closest('.mm-head');
+      if (head) setBranch(head, head.getAttribute('aria-expanded') !== 'true');
+    });
+    $('mmExpand').addEventListener('click', () => document.querySelectorAll('.mm-head').forEach(x => setBranch(x, true)));
+    $('mmCollapse').addEventListener('click', () => document.querySelectorAll('.mm-head').forEach(x => setBranch(x, false)));
+  }
+
+  function setBranch(head, open) {
+    head.setAttribute('aria-expanded', String(open));
+    $(head.getAttribute('aria-controls')).hidden = !open;
   }
 
   buildReItems();
